@@ -467,9 +467,9 @@
   }
   .lib-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0 14px;}
   .lib-toolbar input[type=text]{flex:1;min-width:160px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13.5px;}
-  .lib-toolbar .filters{display:flex;gap:6px;}
-  .lib-toolbar .filters button{background:#fff;border:1px solid var(--line);padding:7px 13px;border-radius:999px;font-size:13px;font-weight:700;color:var(--muted);}
-  .lib-toolbar .filters button.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .filters{display:flex;gap:6px;flex-wrap:wrap;}
+  .filters button{background:#fff;border:1px solid var(--line);padding:7px 13px;border-radius:999px;font-size:13px;font-weight:700;color:var(--muted);}
+  .filters button.active{background:var(--ink);color:#fff;border-color:var(--ink);}
 
   .lib-list{display:flex;flex-direction:column;gap:12px;}
   .lib-qcard{background:#fff;border:1px solid var(--line);border-left:4px solid var(--sun);border-radius:12px;padding:16px 18px;}
@@ -775,13 +775,17 @@
           <span class="sec-tag">희망도서 관리</span>
           <div class="lib-toolbar">
             <input type="text" id="lib-wish-search" placeholder="학번, 이름, 책 제목으로 검색">
-            <div class="filters">
-              <button data-wishfilter="all" class="active">전체</button>
-              <button data-wishfilter="requested">신청됨</button>
-              <button data-wishfilter="reviewing">검토중</button>
-              <button data-wishfilter="purchased">구입완료</button>
-              <button data-wishfilter="rejected">반려</button>
+            <div class="filters" id="wish-main-tabs">
+              <button data-maintab="unreviewed" class="active">🔔 미확인</button>
+              <button data-maintab="reviewed">확인</button>
             </div>
+          </div>
+          <div class="filters" id="wish-status-subtabs" style="margin-top:8px;display:none;">
+            <button data-wishfilter="all" class="active">전체</button>
+            <button data-wishfilter="requested">신청됨</button>
+            <button data-wishfilter="reviewing">검토중</button>
+            <button data-wishfilter="purchased">구입완료</button>
+            <button data-wishfilter="rejected">반려</button>
           </div>
           <div class="lib-toolbar" style="margin-top:10px;">
             <button type="button" id="lib-wish-export-btn" style="background:var(--leaf);color:#fff;border:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;">📊 엑셀로 내보내기</button>
@@ -907,6 +911,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   let libUnlocked = false;
   let libFilter = 'pending';
   let libSearch = '';
+  let wishMainTab = 'unreviewed';
   let wishFilter = 'all';
   let libWishSearch = '';
 
@@ -1546,9 +1551,17 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
 
   const READ365_URL = 'https://read365.edunet.net/PureScreen/SchoolSearch?schoolName=만수여자중학교&provCode=E10&neisCode=E100000623';
 
+  function isWishReviewed(w){
+    return w.reviewed === true || (w.status && w.status !== 'requested');
+  }
   function getFilteredWishes(){
     let filtered = wishes;
-    if(wishFilter !== 'all') filtered = filtered.filter(function(w){return w.status === wishFilter;});
+    if(wishMainTab === 'unreviewed'){
+      filtered = filtered.filter(function(w){ return !isWishReviewed(w); });
+    }else{
+      filtered = filtered.filter(function(w){ return isWishReviewed(w); });
+      if(wishFilter !== 'all') filtered = filtered.filter(function(w){return w.status === wishFilter;});
+    }
     if(libWishSearch){
       filtered = filtered.filter(function(w){
         return (w.studentId||'').toLowerCase().includes(libWishSearch) ||
@@ -1562,10 +1575,18 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   const WISH_ADMIN_PAGE_SIZE = 5;
   let wishAdminPage = 1;
 
+  function updateWishMainTabBadge(){
+    const btn = document.querySelector('#wish-main-tabs button[data-maintab="unreviewed"]');
+    if(!btn) return;
+    const count = wishes.filter(function(w){ return !isWishReviewed(w); }).length;
+    btn.textContent = count > 0 ? ('🔔 미확인 ('+count+')') : '🔔 미확인';
+  }
+
   function renderWishAdmin(){
     const list = document.getElementById('lib-wish-list');
     const pager = document.getElementById('lib-wish-pagination');
     if(!list) return;
+    updateWishMainTabBadge();
     const filtered = getFilteredWishes();
     if(filtered.length === 0){
       list.innerHTML = '<div class="empty-state">해당하는 신청이 없어요.</div>';
@@ -1594,6 +1615,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
           '</select>'+
           '<button class="wish-save-btn">저장</button>'+
           '<span class="saved-msg">저장됐어요</span>'+
+          '<button type="button" class="wish-del-btn" style="margin-left:auto;background:var(--danger);color:#fff;border:none;padding:7px 13px;border-radius:8px;font-size:12.5px;font-weight:700;">삭제</button>'+
         '</div>'+
         '<textarea class="reject-reason-box" placeholder="반려 사유를 간단히 적어주세요 (학생에게 보여요)" style="width:100%;margin-top:10px;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;min-height:56px;'+(w.status==='rejected'?'':'display:none;')+'">'+escapeHtml(w.rejectReason||'')+'</textarea>'+
       '</div>';
@@ -1603,6 +1625,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       const msg = card.querySelector('.saved-msg');
       const statusSelect = card.querySelector('.wish-status-select');
       const reasonBox = card.querySelector('.reject-reason-box');
+      const delBtn = card.querySelector('.wish-del-btn');
       statusSelect.addEventListener('change', function(){
         reasonBox.style.display = (statusSelect.value === 'rejected') ? 'block' : 'none';
       });
@@ -1617,15 +1640,32 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
           if(target){
             target.status = newStatus;
             target.rejectReason = (newStatus === 'rejected') ? reasonText : '';
+            target.reviewed = true;
           }
           const ok = await saveList(WISH_KEY, wishes);
           if(ok){
             msg.style.display = 'inline';
-            setTimeout(function(){msg.style.display='none';}, 2000);
-            renderWishAdmin();
+            setTimeout(function(){
+              msg.style.display='none';
+              renderWishAdmin();
+            }, 700);
             renderWishPublic();
           }
         }finally{ btn.disabled = false; }
+      });
+      delBtn.addEventListener('click', async function(){
+        const id = card.dataset.id;
+        if(!confirm('이 희망도서 신청을 삭제할까요? 학생 화면에서도 사라져요.')) return;
+        delBtn.disabled = true;
+        try{
+          wishes = await loadList(WISH_KEY);
+          wishes = wishes.filter(function(w){ return w.id !== id; });
+          const ok = await saveList(WISH_KEY, wishes);
+          if(ok){
+            renderWishAdmin();
+            renderWishPublic();
+          }
+        }finally{ delBtn.disabled = false; }
       });
     });
 
@@ -1647,9 +1687,23 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       }
     }
   }
-  document.querySelectorAll('.filters button[data-wishfilter]').forEach(function(btn){
+  document.querySelectorAll('#wish-main-tabs button[data-maintab]').forEach(function(btn){
     btn.addEventListener('click', function(){
-      document.querySelectorAll('.filters button[data-wishfilter]').forEach(function(b){b.classList.remove('active');});
+      document.querySelectorAll('#wish-main-tabs button[data-maintab]').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      wishMainTab = btn.dataset.maintab;
+      document.getElementById('wish-status-subtabs').style.display = (wishMainTab === 'reviewed') ? 'flex' : 'none';
+      wishFilter = 'all';
+      document.querySelectorAll('#wish-status-subtabs button[data-wishfilter]').forEach(function(b){
+        b.classList.toggle('active', b.dataset.wishfilter === 'all');
+      });
+      wishAdminPage = 1;
+      renderWishAdmin();
+    });
+  });
+  document.querySelectorAll('#wish-status-subtabs button[data-wishfilter]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('#wish-status-subtabs button[data-wishfilter]').forEach(function(b){b.classList.remove('active');});
       btn.classList.add('active');
       wishFilter = btn.dataset.wishfilter;
       wishAdminPage = 1;
@@ -1668,7 +1722,8 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       return {
         '구분': (w.applicantType === 'teacher' ? '교사' : '학생'), '학번/소속': w.studentId, '이름': w.studentName, '책 제목': w.title, '지은이': w.author,
         '출판사': w.publisher||'', '출판년도': w.pubYear||'', '가격': w.price||'',
-        '신청 사유': w.reason||'', '신청일': fmtDate(w.createdAt), '상태': WISH_STATUS_LABEL[w.status]
+        '신청 사유': w.reason||'', '신청일': fmtDate(w.createdAt), '상태': WISH_STATUS_LABEL[w.status],
+        '확인여부': isWishReviewed(w) ? '확인' : '미확인'
       };
     });
     try{
