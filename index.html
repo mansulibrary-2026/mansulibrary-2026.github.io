@@ -744,6 +744,31 @@
         </div>
 
         <div class="lib-section">
+          <span class="sec-tag">소장 도서 개별 관리</span>
+          <p class="desc">전체 목록은 엑셀로 갱신하지만, 책 한두 권이 바뀌었을 때는 여기서 바로 추가하거나 빼둘 수 있어요.</p>
+
+          <div class="field-row" style="margin-top:14px;">
+            <div class="field"><label for="cat-add-title"><span class="ico">📖</span>책 제목<span class="req">*</span></label><input type="text" id="cat-add-title" placeholder="예: 아몬드"></div>
+            <div class="field"><label for="cat-add-author"><span class="ico">✍️</span>지은이<span class="req">*</span></label><input type="text" id="cat-add-author" placeholder="예: 손원평"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="cat-add-publisher"><span class="ico">🏢</span>출판사 (선택)</label><input type="text" id="cat-add-publisher" placeholder="예: 창비"></div>
+            <div class="field"><label for="cat-add-year"><span class="ico">📅</span>출판년도 (선택)</label><input type="text" id="cat-add-year" placeholder="예: 2017"></div>
+            <div class="field"><label for="cat-add-call"><span class="ico">🔖</span>청구기호 (선택)</label><input type="text" id="cat-add-call" placeholder="예: 813.6 손66ㅇ"></div>
+          </div>
+          <button type="button" id="cat-add-btn" class="primary-btn" style="display:block;width:100%;max-width:220px;margin:14px auto 0;padding:11px 20px;font-size:15px;">소장 목록에 추가</button>
+          <p class="form-msg" id="cat-add-msg" style="text-align:center;"></p>
+
+          <div style="margin-top:22px;">
+            <input type="text" id="cat-manage-search" placeholder="목록에서 제외할 책 검색 (제목·저자)">
+            <div id="cat-manage-results" style="margin-top:10px;"></div>
+          </div>
+
+          <div id="cat-added-list" style="margin-top:22px;"></div>
+          <div id="cat-removed-list" style="margin-top:14px;"></div>
+        </div>
+
+        <div class="lib-section">
           <span class="sec-tag">도서관 소식 관리</span>
           <div class="field-row">
             <div class="field"><label for="lib-news-title"><span class="ico">📝</span>제목<span class="req">*</span></label><input type="text" id="lib-news-title" placeholder="예: 7월 독서 골든벨 안내" maxlength="60"></div>
@@ -903,10 +928,14 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   const PIN_KEY = 'student-pins';
   const NEWS_KEY = 'library-news';
   const WISH_KEY = 'book-requests';
+  const CATALOG_ADD_KEY = 'catalog-additions';
+  const CATALOG_REMOVE_KEY = 'catalog-removals';
 
   let questions = [];
   let news = [];
   let wishes = [];
+  let catalogAdditions = [];
+  let catalogRemovals = [];
   let currentStudent = null;
   let libUnlocked = false;
   let libFilter = 'pending';
@@ -1359,11 +1388,21 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   let catalogMatches = [];
   let catalogPage = 1;
 
+  function catalogItemKey(b){ return (b.t||'')+'||'+(b.c||''); }
+  function getEffectiveCatalog(){
+    const removedKeys = {};
+    (catalogRemovals||[]).forEach(function(k){ removedKeys[k] = true; });
+    const base = (typeof LIBRARY_CATALOG !== 'undefined' ? LIBRARY_CATALOG : []).filter(function(b){
+      return !removedKeys[catalogItemKey(b)];
+    });
+    return base.concat(catalogAdditions||[]);
+  }
+
   function renderCatalogResults(query){
     const box = document.getElementById('catalog-search-results');
     if(!query){ box.innerHTML = ''; catalogMatches = []; return; }
     const q = query.toLowerCase();
-    catalogMatches = (typeof LIBRARY_CATALOG !== 'undefined' ? LIBRARY_CATALOG : []).filter(function(b){
+    catalogMatches = getEffectiveCatalog().filter(function(b){
       return b.t.toLowerCase().indexOf(q) !== -1 || (b.a||'').toLowerCase().indexOf(q) !== -1;
     });
     catalogPage = 1;
@@ -1412,7 +1451,143 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       });
     });
   }
-  const catalogSearchInput = document.getElementById('catalog-search-input');
+
+  /* ---------------- CATALOG MANUAL ADD/REMOVE (admin) ---------------- */
+  function renderCatalogAddedList(){
+    const box = document.getElementById('cat-added-list');
+    if(!box) return;
+    if(!catalogAdditions || catalogAdditions.length === 0){ box.innerHTML = ''; return; }
+    box.innerHTML = '<h4 style="font-size:14px;margin-bottom:8px;">직접 추가한 도서 ('+catalogAdditions.length+'권)</h4>'+
+      catalogAdditions.map(function(b, idx){
+        return '<div class="catalog-item" style="display:flex;justify-content:space-between;align-items:center;gap:10px;">'+
+          '<div><div class="t">'+escapeHtml(b.t)+'</div><div class="m">'+escapeHtml(b.a)+(b.p?' · '+escapeHtml(b.p):'')+(b.y?' · '+escapeHtml(b.y):'')+'</div></div>'+
+          '<button type="button" class="cat-add-del-btn" data-idx="'+idx+'" style="background:var(--danger);color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;flex-shrink:0;">삭제</button>'+
+        '</div>';
+      }).join('');
+    box.querySelectorAll('.cat-add-del-btn').forEach(function(btn){
+      btn.addEventListener('click', async function(){
+        const idx = Number(btn.dataset.idx);
+        btn.disabled = true;
+        try{
+          catalogAdditions = await loadList(CATALOG_ADD_KEY);
+          catalogAdditions.splice(idx, 1);
+          await saveList(CATALOG_ADD_KEY, catalogAdditions);
+          renderCatalogAddedList();
+        }finally{ btn.disabled = false; }
+      });
+    });
+  }
+
+  function renderCatalogRemovedList(){
+    const box = document.getElementById('cat-removed-list');
+    if(!box) return;
+    if(!catalogRemovals || catalogRemovals.length === 0){ box.innerHTML = ''; return; }
+    const base = (typeof LIBRARY_CATALOG !== 'undefined' ? LIBRARY_CATALOG : []);
+    const removedBooks = catalogRemovals.map(function(key){
+      const found = base.find(function(b){ return catalogItemKey(b) === key; });
+      return {key: key, book: found};
+    });
+    box.innerHTML = '<h4 style="font-size:14px;margin-bottom:8px;">목록에서 제외한 도서 ('+removedBooks.length+'권)</h4>'+
+      removedBooks.map(function(item){
+        const label = item.book ? escapeHtml(item.book.t)+' · '+escapeHtml(item.book.a) : escapeHtml(item.key);
+        return '<div class="catalog-item" style="display:flex;justify-content:space-between;align-items:center;gap:10px;">'+
+          '<div class="t">'+label+'</div>'+
+          '<button type="button" class="cat-restore-btn" data-key="'+escapeAttr(item.key)+'" style="background:var(--sky);color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;flex-shrink:0;">복원</button>'+
+        '</div>';
+      }).join('');
+    box.querySelectorAll('.cat-restore-btn').forEach(function(btn){
+      btn.addEventListener('click', async function(){
+        const key = btn.dataset.key;
+        btn.disabled = true;
+        try{
+          catalogRemovals = await loadList(CATALOG_REMOVE_KEY);
+          catalogRemovals = catalogRemovals.filter(function(k){ return k !== key; });
+          await saveList(CATALOG_REMOVE_KEY, catalogRemovals);
+          renderCatalogRemovedList();
+        }finally{ btn.disabled = false; }
+      });
+    });
+  }
+
+  const catAddBtn = document.getElementById('cat-add-btn');
+  if(catAddBtn){
+    catAddBtn.addEventListener('click', async function(){
+      const title = document.getElementById('cat-add-title').value.trim();
+      const author = document.getElementById('cat-add-author').value.trim();
+      const publisher = document.getElementById('cat-add-publisher').value.trim();
+      const year = document.getElementById('cat-add-year').value.trim();
+      const call = document.getElementById('cat-add-call').value.trim();
+      const msg = document.getElementById('cat-add-msg');
+      if(!title || !author){
+        msg.textContent = '책 제목과 지은이는 꼭 입력해주세요.';
+        msg.className = 'form-msg err';
+        return;
+      }
+      catAddBtn.disabled = true;
+      try{
+        catalogAdditions = await loadList(CATALOG_ADD_KEY);
+        catalogAdditions.push({t: title, a: author, p: publisher, y: year, c: call});
+        const ok = await saveList(CATALOG_ADD_KEY, catalogAdditions);
+        if(ok){
+          msg.textContent = '추가됐어요! 이제 검색 결과에 바로 반영돼요.';
+          msg.className = 'form-msg ok';
+          document.getElementById('cat-add-title').value = '';
+          document.getElementById('cat-add-author').value = '';
+          document.getElementById('cat-add-publisher').value = '';
+          document.getElementById('cat-add-year').value = '';
+          document.getElementById('cat-add-call').value = '';
+          renderCatalogAddedList();
+        }else{
+          msg.textContent = '저장에 실패했어요. 다시 시도해주세요.';
+          msg.className = 'form-msg err';
+        }
+      }finally{ catAddBtn.disabled = false; }
+    });
+  }
+
+  const catManageSearch = document.getElementById('cat-manage-search');
+  if(catManageSearch){
+    let catManageDebounce = null;
+    catManageSearch.addEventListener('input', function(){
+      const val = this.value.trim();
+      if(catManageDebounce) clearTimeout(catManageDebounce);
+      catManageDebounce = setTimeout(function(){ renderCatManageResults(val); }, 250);
+    });
+  }
+  function renderCatManageResults(query){
+    const box = document.getElementById('cat-manage-results');
+    if(!box) return;
+    if(!query){ box.innerHTML = ''; return; }
+    const q = query.toLowerCase();
+    const base = (typeof LIBRARY_CATALOG !== 'undefined' ? LIBRARY_CATALOG : []);
+    const removedSet = {};
+    (catalogRemovals||[]).forEach(function(k){ removedSet[k] = true; });
+    const matches = base.filter(function(b){
+      return !removedSet[catalogItemKey(b)] && (b.t.toLowerCase().indexOf(q) !== -1 || (b.a||'').toLowerCase().indexOf(q) !== -1);
+    }).slice(0, 10);
+    if(matches.length === 0){ box.innerHTML = '<div class="catalog-notfound">해당하는 책을 찾지 못했어요.</div>'; return; }
+    box.innerHTML = matches.map(function(b){
+      return '<div class="catalog-item" style="display:flex;justify-content:space-between;align-items:center;gap:10px;">'+
+        '<div><div class="t">'+escapeHtml(b.t)+'</div><div class="m">'+escapeHtml(b.a)+(b.c?' · 청구기호 '+escapeHtml(b.c):'')+'</div></div>'+
+        '<button type="button" class="cat-remove-btn" data-key="'+escapeAttr(catalogItemKey(b))+'" style="background:var(--danger);color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;flex-shrink:0;">이 책 제외</button>'+
+      '</div>';
+    }).join('');
+    box.querySelectorAll('.cat-remove-btn').forEach(function(btn){
+      btn.addEventListener('click', async function(){
+        const key = btn.dataset.key;
+        btn.disabled = true;
+        try{
+          catalogRemovals = await loadList(CATALOG_REMOVE_KEY);
+          if(catalogRemovals.indexOf(key) === -1) catalogRemovals.push(key);
+          const ok = await saveList(CATALOG_REMOVE_KEY, catalogRemovals);
+          if(ok){
+            renderCatManageResults(catManageSearch.value.trim());
+            renderCatalogRemovedList();
+          }
+        }finally{ btn.disabled = false; }
+      });
+    });
+  }
   if(catalogSearchInput){
     let catalogDebounce = null;
     catalogSearchInput.addEventListener('input', function(){
@@ -1996,9 +2171,13 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     news = await loadNewsCollection();
     wishes = await loadList(WISH_KEY);
     questions = await loadList(INQUIRY_KEY);
+    catalogAdditions = await loadList(CATALOG_ADD_KEY);
+    catalogRemovals = await loadList(CATALOG_REMOVE_KEY);
     renderNewsAdmin();
     renderWishAdmin();
     renderLibList();
+    renderCatalogAddedList();
+    renderCatalogRemovedList();
   }
 
   document.querySelectorAll('.filters button[data-libfilter]').forEach(function(btn){
@@ -2102,6 +2281,8 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   (async function init(){
     news = await loadNewsCollection();
     wishes = await loadList(WISH_KEY);
+    catalogAdditions = await loadList(CATALOG_ADD_KEY);
+    catalogRemovals = await loadList(CATALOG_REMOVE_KEY);
     renderNewsPublic();
     renderWishPublic();
   })();
