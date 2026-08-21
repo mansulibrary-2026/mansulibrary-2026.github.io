@@ -2274,11 +2274,19 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     window.scrollTo({top:0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
   }
   document.querySelectorAll('nav.tabs button').forEach(function(btn){
-    btn.addEventListener('click', function(){ activateTab(btn.dataset.target); });
+    btn.addEventListener('click', function(){
+      activateTab(btn.dataset.target);
+      if(history.replaceState){ history.replaceState(null, '', '#'+btn.dataset.target); }
+    });
   });
 
   /* ---------------- INIT ---------------- */
   renderFaq();
+  const validTabIds = ['news','faq','wishlist','ask','librarian'];
+  const initialHash = (window.location.hash || '').replace('#','');
+  if(validTabIds.indexOf(initialHash) !== -1){
+    activateTab(initialHash);
+  }
   (async function init(){
     news = await loadNewsCollection();
     wishes = await loadList(WISH_KEY);
