@@ -472,11 +472,38 @@
   .lib-setup-note{font-size:12.5px;color:var(--muted);margin-top:8px;}
   .lib-err{color:var(--danger);font-size:13px;margin-top:8px;display:none;}
 
-  .lib-section{margin-bottom:28px;}
-  .lib-section .sec-tag{
-    display:inline-block;font-size:12px;font-weight:700;color:var(--coral-dark);
-    background:#E3F1E8;padding:3px 10px;border-radius:6px;margin-bottom:10px;
+  .lib-section{
+    margin-bottom:24px;background:#fff;border:1.5px solid var(--line);border-top:6px solid var(--ink);
+    border-radius:14px;padding:22px 24px;
   }
+  .lib-section .sec-tag{
+    display:inline-block;font-size:13px;font-weight:800;color:var(--coral-dark);
+    background:#E3F1E8;padding:4px 12px;border-radius:6px;margin-bottom:12px;
+  }
+  .lib-section.sec-pin{border-top-color:var(--coral);}
+  .lib-section.sec-pin .sec-tag{background:#FBE9E6;color:var(--coral-dark);}
+  .lib-section.sec-catalog{border-top-color:var(--sky);}
+  .lib-section.sec-catalog .sec-tag{background:#DEF0EE;color:#1C6E68;}
+  .lib-section.sec-news{border-top-color:var(--sun);}
+  .lib-section.sec-news .sec-tag{background:#FBF0DA;color:#8A6200;}
+  .lib-section.sec-wish{border-top-color:var(--leaf);}
+  .lib-section.sec-wish .sec-tag{background:#E3F1E8;color:#1F6B47;}
+  .lib-section.sec-question{border-top-color:var(--purple);}
+  .lib-section.sec-question .sec-tag{background:#EDEFE5;color:#4C5F3E;}
+  .lib-section.sec-footnote{
+    border-top-color:var(--line);background:transparent;border-left:none;border-right:none;border-bottom:none;
+    padding:16px 4px 0;box-shadow:none;
+  }
+  .lib-section.sec-footnote .sec-tag{background:none;color:var(--muted);padding:0;font-weight:700;}
+  .lib-section.sec-footnote .desc{font-size:12.5px;}
+
+  .cat-remove-box{
+    margin-top:22px;background:#FDEDEB;border:1.5px solid #E7A79E;border-radius:12px;padding:14px 16px;
+  }
+  .cat-remove-box label{display:block;font-size:13.5px;font-weight:800;color:var(--danger);margin-bottom:8px;}
+  .cat-remove-box input{width:100%;padding:9px 12px;border:1.5px solid var(--danger);border-radius:10px;font-size:13.5px;color:var(--danger);}
+  .cat-remove-box input::placeholder{color:#D89189;}
+
   .lib-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0 14px;}
   .lib-toolbar input[type=text]{flex:1;min-width:160px;padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13.5px;}
   .filters{display:flex;gap:6px;flex-wrap:wrap;}
@@ -503,27 +530,35 @@
   .lib-news-item .date{font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px;}
   .lib-news-item button{background:var(--danger);color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;flex-shrink:0;white-space:nowrap;}
 
-  .lib-wish-group{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+  .lib-wish-group{
+    background:#fff;border:2px solid var(--ink);border-left:7px solid var(--sun);
+    border-radius:12px;padding:16px 18px;margin-bottom:16px;
+    box-shadow:0 2px 8px rgba(41,37,32,0.06);
+  }
+  .lib-wish-group:nth-child(4n+2){border-left-color:var(--sky);}
+  .lib-wish-group:nth-child(4n+3){border-left-color:var(--leaf);}
+  .lib-wish-group:nth-child(4n+4){border-left-color:var(--purple);}
   .lib-wish-group .meta{display:flex;flex-wrap:wrap;gap:8px;font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:10px;}
-  .lib-wish-book{display:flex;gap:10px;padding:12px 0;border-top:1px dashed var(--line);}
+  .lib-wish-book{display:flex;gap:12px;padding:12px 0;border-top:1px dashed var(--line);align-items:flex-start;}
   .lib-wish-book:first-of-type{border-top:none;padding-top:0;}
   .lib-wish-book .num{font-weight:800;font-size:14px;color:var(--muted);flex-shrink:0;padding-top:1px;}
   .lib-wish-book .book-body{flex:1;min-width:0;}
   .lib-wish-book .booktitle{font-weight:700;font-size:14.5px;word-break:break-word;}
   .lib-wish-book .author{font-size:12.5px;color:var(--muted);word-break:break-word;}
   .lib-wish-book .reason{font-size:13px;color:var(--ink);margin-top:6px;}
-  .lib-wish-book .status-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px;}
-  .lib-wish-book select{padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;}
-  .lib-wish-book .status-row button{background:var(--ink);color:#fff;border:none;padding:7px 13px;border-radius:8px;font-size:12.5px;font-weight:700;white-space:nowrap;flex-shrink:0;}
-  .group-save-row{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);}
+  .lib-wish-book .book-controls{display:flex;flex-direction:column;gap:6px;flex-shrink:0;width:96px;}
+  .lib-wish-book select{padding:7px 8px;border:1.5px solid var(--line);border-radius:8px;font-size:12.5px;width:100%;}
+  .lib-wish-book .wish-del-btn{background:var(--danger);color:#fff;border:none;padding:7px 8px;border-radius:8px;font-size:12px;font-weight:700;width:100%;}
+  .group-save-row{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);}
   .group-save-row .wish-save-btn{background:var(--coral);color:#fff;border:none;padding:9px 22px;border-radius:8px;font-size:13.5px;font-weight:700;}
 
   footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13px;}
 
   @media (max-width:680px){
-    .lib-wish-book .status-row{flex-direction:column;align-items:stretch;}
-    .lib-wish-book .status-row select,
-    .lib-wish-book .status-row button{width:100%;text-align:center;}
+    .lib-wish-book{flex-wrap:wrap;}
+    .lib-wish-book .book-controls{width:100%;flex-direction:row;}
+    .lib-wish-book .book-controls select,
+    .lib-wish-book .book-controls button{flex:1;}
     .group-save-row{flex-direction:column;align-items:stretch;}
     .group-save-row .saved-msg{text-align:center;}
     .lib-news-item{flex-direction:column;align-items:stretch;}
@@ -754,8 +789,8 @@
 
       <div id="lib-manage-area" style="display:none;">
 
-        <div class="lib-section">
-          <span class="sec-tag">학생 비밀번호 초기화</span>
+        <div class="lib-section sec-pin">
+          <span class="sec-tag">🔑 학생 비밀번호 초기화</span>
           <p class="desc">학생이 질문방 비밀번호를 잊어버렸을 때, 학번을 입력하면 초기화돼요.</p>
           <div class="field-row" style="align-items:flex-end;">
             <div class="field" style="max-width:160px;"><label for="lib-reset-id"><span class="ico">🔢</span>학번</label><input type="text" id="lib-reset-id" inputmode="numeric" placeholder="예: 30115" maxlength="10"></div>
@@ -764,13 +799,8 @@
           <p class="lib-setup-note" id="lib-reset-msg"></p>
         </div>
 
-        <div class="lib-section">
-          <span class="sec-tag">알라딘 도서검색 연동</span>
-          <p class="desc">희망도서 신청 폼의 책 제목 검색은 별도 서버(Vercel)를 통해 안전하게 연결되어 있어요. 알라딘 키는 그 서버에만 저장되어 있고, 이 페이지에는 저장되지 않아요. 별도로 설정하실 건 없어요.</p>
-        </div>
-
-        <div class="lib-section">
-          <span class="sec-tag">소장 도서 개별 관리</span>
+        <div class="lib-section sec-catalog">
+          <span class="sec-tag">📚 소장 도서 개별 관리</span>
           <p class="desc">전체 목록은 엑셀로 갱신하지만, 책 한두 권이 바뀌었을 때는 여기서 바로 추가하거나 빼둘 수 있어요.</p>
 
           <div class="field-row" style="margin-top:14px;">
@@ -785,8 +815,9 @@
           <button type="button" id="cat-add-btn" class="primary-btn" style="display:block;width:100%;max-width:220px;margin:14px auto 0;padding:11px 20px;font-size:15px;">소장 목록에 추가</button>
           <p class="form-msg" id="cat-add-msg" style="text-align:center;"></p>
 
-          <div style="margin-top:22px;">
-            <input type="text" id="cat-manage-search" placeholder="목록에서 제외할 책 검색 (제목·저자)">
+          <div class="cat-remove-box">
+            <label for="cat-manage-search">⚠️ 목록에서 제외할 책 검색 (제목·저자)</label>
+            <input type="text" id="cat-manage-search" placeholder="제외할 책의 제목이나 저자를 입력하세요">
             <div id="cat-manage-results" style="margin-top:10px;"></div>
           </div>
 
@@ -794,8 +825,8 @@
           <div id="cat-removed-list" style="margin-top:14px;"></div>
         </div>
 
-        <div class="lib-section">
-          <span class="sec-tag">도서관 소식 관리</span>
+        <div class="lib-section sec-news">
+          <span class="sec-tag">🌿 도서관 소식 관리</span>
           <div class="field-row">
             <div class="field"><label for="lib-news-title"><span class="ico">📝</span>제목<span class="req">*</span></label><input type="text" id="lib-news-title" placeholder="예: 7월 독서 골든벨 안내" maxlength="60"></div>
           </div>
@@ -820,10 +851,11 @@
           </div>
           <p class="form-msg" id="lib-news-msg"></p>
           <div class="lib-news-list" id="lib-news-list"></div>
+          <div class="catalog-pagination" id="lib-news-pagination" style="margin-top:16px;"></div>
         </div>
 
-        <div class="lib-section">
-          <span class="sec-tag">희망도서 관리</span>
+        <div class="lib-section sec-wish">
+          <span class="sec-tag">🙋 희망도서 관리</span>
           <div class="lib-toolbar">
             <input type="text" id="lib-wish-search" placeholder="학번, 이름, 책 제목으로 검색">
             <div class="filters" id="wish-main-tabs">
@@ -846,8 +878,8 @@
           <div class="catalog-pagination" id="lib-wish-pagination" style="margin-top:16px;"></div>
         </div>
 
-        <div class="lib-section">
-          <span class="sec-tag">질문 관리</span>
+        <div class="lib-section sec-question">
+          <span class="sec-tag">💬 질문 관리</span>
           <div class="lib-toolbar">
             <input type="text" id="lib-search" placeholder="학번 또는 이름으로 검색">
             <div class="filters">
@@ -857,6 +889,11 @@
             </div>
           </div>
           <div class="lib-list" id="lib-list"></div>
+        </div>
+
+        <div class="lib-section sec-footnote">
+          <span class="sec-tag">알라딘 도서검색 연동</span>
+          <p class="desc">희망도서 신청 폼의 책 제목 검색은 별도 서버(Vercel)를 통해 안전하게 연결되어 있어요. 알라딘 키는 그 서버에만 저장되어 있고, 이 페이지에는 저장되지 않아요. 별도로 설정하실 건 없어요.</p>
         </div>
 
       </div>
@@ -1232,12 +1269,26 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     resetNewsForm();
   });
 
+  const NEWS_ADMIN_PAGE_SIZE = 5;
+  let newsAdminPage = 1;
+
   function renderNewsAdmin(){
     const list = document.getElementById('lib-news-list');
+    const pager = document.getElementById('lib-news-pagination');
     if(!list) return;
     const sorted = news.slice().sort(function(a,b){return new Date(b.createdAt)-new Date(a.createdAt);});
-    if(sorted.length === 0){ list.innerHTML = '<div class="empty-state">등록된 소식이 없어요.</div>'; return; }
-    list.innerHTML = sorted.map(function(n){
+    if(sorted.length === 0){
+      list.innerHTML = '<div class="empty-state">등록된 소식이 없어요.</div>';
+      if(pager) pager.innerHTML = '';
+      return;
+    }
+    const totalPages = Math.ceil(sorted.length / NEWS_ADMIN_PAGE_SIZE);
+    if(newsAdminPage < 1) newsAdminPage = 1;
+    if(newsAdminPage > totalPages) newsAdminPage = totalPages;
+    const start = (newsAdminPage - 1) * NEWS_ADMIN_PAGE_SIZE;
+    const pageItems = sorted.slice(start, start + NEWS_ADMIN_PAGE_SIZE);
+
+    list.innerHTML = pageItems.map(function(n){
       return '<div class="lib-news-item" data-id="'+n.id+'">'+
         '<div><div class="titletext">'+escapeHtml(n.title)+'</div><div class="date">'+fmtDate(n.createdAt)+'</div></div>'+
         '<div style="display:flex;gap:8px;flex-shrink:0;">'+
@@ -1277,6 +1328,24 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
         btn.disabled = false;
       });
     });
+
+    if(pager){
+      if(totalPages > 1){
+        pager.innerHTML =
+          '<button type="button" class="news-page-btn" data-page="'+(newsAdminPage-1)+'" '+(newsAdminPage<=1?'disabled':'')+'>‹ 이전</button>'+
+          '<span class="page-indicator">'+newsAdminPage+' / '+totalPages+' 페이지</span>'+
+          '<button type="button" class="news-page-btn" data-page="'+(newsAdminPage+1)+'" '+(newsAdminPage>=totalPages?'disabled':'')+'>다음 ›</button>';
+        pager.querySelectorAll('.news-page-btn').forEach(function(btn){
+          btn.addEventListener('click', function(){
+            if(btn.disabled) return;
+            newsAdminPage = Number(btn.dataset.page);
+            renderNewsAdmin();
+          });
+        });
+      }else{
+        pager.innerHTML = '';
+      }
+    }
   }
   function readAndResizeImage(file, maxDim){
     maxDim = maxDim || 1600;
@@ -1373,6 +1442,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
         msg.className = 'form-msg ok';
         resetNewsForm();
         news = await loadNewsCollection();
+        newsAdminPage = 1;
         renderNewsAdmin();
         renderNewsPublic();
       }else{
@@ -1885,21 +1955,21 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
               '<div class="booktitle">'+escapeHtml(w.title)+'</div>'+
               '<div class="author">'+escapeHtml(w.author)+(w.publisher ? ' · '+escapeHtml(w.publisher) : '')+(w.pubYear ? ' · '+escapeHtml(w.pubYear) : '')+(w.price ? ' · '+escapeHtml(w.price)+'원' : '')+'</div>'+
               (w.reason ? '<div class="reason">'+escapeHtml(w.reason)+'</div>' : '')+
-              '<div class="status-row">'+
-                '<select class="wish-status-select">'+
-                  Object.keys(WISH_STATUS_LABEL).map(function(k){
-                    return '<option value="'+k+'"'+(w.status===k?' selected':'')+'>'+WISH_STATUS_LABEL[k]+'</option>';
-                  }).join('')+
-                '</select>'+
-                '<button type="button" class="wish-del-btn" style="margin-left:auto;background:var(--danger);color:#fff;border:none;padding:7px 13px;border-radius:8px;font-size:12.5px;font-weight:700;">삭제</button>'+
-              '</div>'+
               '<textarea class="reject-reason-box" placeholder="반려 사유를 간단히 적어주세요 (학생에게 보여요)" style="width:100%;margin-top:10px;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;min-height:56px;'+(w.status==='rejected'?'':'display:none;')+'">'+escapeHtml(w.rejectReason||'')+'</textarea>'+
+            '</div>'+
+            '<div class="book-controls">'+
+              '<select class="wish-status-select">'+
+                Object.keys(WISH_STATUS_LABEL).map(function(k){
+                  return '<option value="'+k+'"'+(w.status===k?' selected':'')+'>'+WISH_STATUS_LABEL[k]+'</option>';
+                }).join('')+
+              '</select>'+
+              '<button type="button" class="wish-del-btn">삭제</button>'+
             '</div>'+
           '</div>';
         }).join('')+
         '<div class="group-save-row">'+
-          '<button class="wish-save-btn">저장</button>'+
           '<span class="saved-msg">저장됐어요</span>'+
+          '<button class="wish-save-btn">저장</button>'+
         '</div>'+
       '</div>';
     }).join('');
