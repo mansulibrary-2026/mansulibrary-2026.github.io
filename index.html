@@ -223,8 +223,20 @@
     .search-row{flex-direction:column;}
     .search-row button{width:100%;padding:12px 0;}
   }
-  #wish-submit-btn{
+  #wish-add-cart-btn{
     display:block;width:100%;max-width:240px;margin:26px auto 0;padding:11px 20px;font-size:15px;
+  }
+  #wish-submit-btn{
+    display:block;width:100%;margin:18px auto 0;padding:14px 20px;font-size:16px;
+  }
+  .wish-cart-item{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:8px;
+  }
+  .wish-cart-item .t{font-weight:700;font-size:14px;}
+  .wish-cart-item .m{font-size:12px;color:var(--muted);margin-top:2px;}
+  .wish-cart-item .rm-btn{
+    background:var(--danger);color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;flex-shrink:0;
   }
   .highlight-box{
     background:var(--sun-light);border:1.5px solid rgba(224,168,58,0.5);border-radius:14px;
@@ -629,7 +641,14 @@
       <div class="field-row">
         <div class="field"><label for="w-reason"><span class="ico">💬</span>신청 사유 (선택)</label><textarea id="w-reason" placeholder="이 책을 신청하는 이유가 있다면 적어주세요" maxlength="300"></textarea></div>
       </div>
-      <button class="primary-btn" id="wish-submit-btn">신청하기</button>
+      <button type="button" class="primary-btn" id="wish-add-cart-btn" style="background:var(--sky);">➕ 목록에 추가</button>
+      <p class="form-msg" id="wish-cart-msg" style="text-align:center;"></p>
+
+      <div id="wish-cart-wrap" style="display:none;margin-top:24px;">
+        <p style="font-weight:700;font-size:14.5px;margin-bottom:10px;">📋 신청할 책 목록 (<span id="wish-cart-count">0</span>권)</p>
+        <div id="wish-cart-list"></div>
+        <button class="primary-btn" id="wish-submit-btn" style="max-width:none;">이대로 신청하기</button>
+      </div>
       <p class="form-msg" id="wish-msg"></p>
     </div>
 
@@ -1675,19 +1694,74 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     }
   });
 
-  document.getElementById('wish-submit-btn').addEventListener('click', async function(){
-    const id = document.getElementById('w-id').value.trim();
-    const name = document.getElementById('w-name').value.trim();
+  let wishCart = [];
+
+  function clearBookFields(){
+    document.getElementById('w-title').value = '';
+    document.getElementById('w-author').value = '';
+    document.getElementById('w-publisher').value = '';
+    document.getElementById('w-pubyear').value = '';
+    document.getElementById('w-price').value = '';
+    document.getElementById('w-reason').value = '';
+  }
+
+  function renderWishCart(){
+    const wrap = document.getElementById('wish-cart-wrap');
+    const list = document.getElementById('wish-cart-list');
+    const countEl = document.getElementById('wish-cart-count');
+    if(wishCart.length === 0){
+      wrap.style.display = 'none';
+      list.innerHTML = '';
+      return;
+    }
+    wrap.style.display = 'block';
+    countEl.textContent = wishCart.length;
+    list.innerHTML = wishCart.map(function(b, idx){
+      return '<div class="wish-cart-item">'+
+        '<div><div class="t">'+escapeHtml(b.title)+'</div><div class="m">'+escapeHtml(b.author)+(b.publisher?' · '+escapeHtml(b.publisher):'')+(b.pubYear?' · '+escapeHtml(b.pubYear):'')+'</div></div>'+
+        '<button type="button" class="rm-btn" data-idx="'+idx+'">삭제</button>'+
+      '</div>';
+    }).join('');
+    list.querySelectorAll('.rm-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        wishCart.splice(Number(btn.dataset.idx), 1);
+        renderWishCart();
+      });
+    });
+  }
+
+  document.getElementById('wish-add-cart-btn').addEventListener('click', function(){
     const title = document.getElementById('w-title').value.trim();
     const author = document.getElementById('w-author').value.trim();
     const publisher = document.getElementById('w-publisher').value.trim();
     const pubYear = document.getElementById('w-pubyear').value.trim();
     const price = document.getElementById('w-price').value.trim();
     const reason = document.getElementById('w-reason').value.trim();
+    const msg = document.getElementById('wish-cart-msg');
+    if(!title || !author || !publisher){
+      msg.textContent = '책 제목, 지은이, 출판사는 꼭 입력해주세요.';
+      msg.className = 'form-msg err';
+      return;
+    }
+    wishCart.push({title:title, author:author, publisher:publisher, pubYear:pubYear, price:price, reason:reason});
+    msg.textContent = '목록에 담았어요. 계속해서 다른 책을 검색해 추가할 수 있어요.';
+    msg.className = 'form-msg ok';
+    clearBookFields();
+    renderWishCart();
+  });
+
+  document.getElementById('wish-submit-btn').addEventListener('click', async function(){
+    const id = document.getElementById('w-id').value.trim();
+    const name = document.getElementById('w-name').value.trim();
     const msg = document.getElementById('wish-msg');
     const idFieldLabel = wishApplicantType === 'teacher' ? '소속' : '학번';
-    if(!id || !name || !title || !author || !publisher){
-      msg.textContent = idFieldLabel+', 이름, 책 제목, 지은이, 출판사는 꼭 입력해주세요.';
+    if(!id || !name){
+      msg.textContent = idFieldLabel+'과 이름을 입력해주세요.';
+      msg.className = 'form-msg err';
+      return;
+    }
+    if(wishCart.length === 0){
+      msg.textContent = '먼저 책을 목록에 추가해주세요.';
       msg.className = 'form-msg err';
       return;
     }
@@ -1695,26 +1769,27 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     msg.textContent = '';
     try{
       wishes = await loadList(WISH_KEY);
-      wishes.push({
-        id:'w_'+Date.now(), studentId:id, studentName:name, applicantType:wishApplicantType,
-        title:title, author:author, publisher:publisher, pubYear:pubYear, price:price, reason:reason,
-        status:'requested', createdAt:new Date().toISOString()
+      const now = Date.now();
+      wishCart.forEach(function(b, i){
+        wishes.push({
+          id:'w_'+now+'_'+i, studentId:id, studentName:name, applicantType:wishApplicantType,
+          title:b.title, author:b.author, publisher:b.publisher, pubYear:b.pubYear, price:b.price, reason:b.reason,
+          status:'requested', createdAt:new Date().toISOString()
+        });
       });
       const ok = await saveList(WISH_KEY, wishes);
       if(ok){
-        msg.textContent = '신청이 접수됐어요!';
+        msg.textContent = wishCart.length+'권 신청이 접수됐어요!';
         msg.className = 'form-msg ok';
+        const titleList = wishCart.map(function(b){ return b.title; }).join(', ');
         sendNotificationEmail(
           id+' '+name+' ('+(wishApplicantType==='teacher'?'교사':'학생')+')',
-          '희망도서 신청',
-          title+' / '+author
+          '희망도서 신청 ('+wishCart.length+'권)',
+          titleList
         );
-        document.getElementById('w-title').value = '';
-        document.getElementById('w-author').value = '';
-        document.getElementById('w-publisher').value = '';
-        document.getElementById('w-pubyear').value = '';
-        document.getElementById('w-price').value = '';
-        document.getElementById('w-reason').value = '';
+        wishCart = [];
+        clearBookFields();
+        renderWishCart();
         renderWishPublic();
       }else{
         msg.textContent = '신청에 실패했어요. 다시 시도해주세요.';
