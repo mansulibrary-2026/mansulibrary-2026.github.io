@@ -880,7 +880,8 @@
             <button data-wishfilter="rejected">반려</button>
           </div>
           <div class="lib-toolbar" style="margin-top:10px;">
-            <button type="button" id="lib-wish-export-btn" style="background:var(--leaf);color:#fff;border:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;">📊 엑셀로 내보내기</button>
+            <button type="button" id="lib-wish-export-btn" style="background:var(--leaf);color:#fff;border:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;">📊 엑셀로 내보내기 (사람별)</button>
+            <button type="button" id="lib-wish-export-purchase-btn" style="background:#5B5FC7;color:#fff;border:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;">📋 구입목록 형식으로 내보내기</button>
             <a href="https://read365.edunet.net/PureScreen/SchoolSearch?schoolName=만수여자중학교&provCode=E10&neisCode=E100000623" target="_blank" rel="noopener" style="background:var(--sky);color:#fff;text-decoration:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;display:inline-block;">📚 독서로에서 확인 ↗</a>
           </div>
           <div class="wish-bulk-toolbar" id="wish-bulk-toolbar">
@@ -2141,6 +2142,39 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       XLSX.utils.book_append_sheet(wb, ws, '희망도서');
       const today = new Date();
       const fname = '희망도서_신청목록_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0')+'.xlsx';
+      XLSX.writeFile(wb, fname);
+    }catch(e){
+      alert('엑셀 파일을 만드는 데 실패했어요. 다시 시도해주세요.');
+    }
+  });
+
+  document.getElementById('lib-wish-export-purchase-btn').addEventListener('click', function(){
+    const groups = getFilteredWishGroups();
+    const flatItems = [];
+    groups.forEach(function(g){ g.items.forEach(function(w){ flatItems.push(w); }); });
+    if(flatItems.length === 0){ alert('내보낼 신청 내역이 없어요.'); return; }
+
+    const today = new Date();
+    const title = today.getFullYear()+'년 만수여자중학교 하늘정원도서관 희망도서 구입목록';
+    const header = ['순번','도  서  명','저  자','출 판 사','권수\n/셋트','가격','합계'];
+    const aoa = [[title], [], header];
+    let totalSum = 0;
+    flatItems.forEach(function(w, idx){
+      const price = parseInt(String(w.price||'').replace(/[^0-9]/g,''), 10) || 0;
+      const qty = 1;
+      const lineTotal = price * qty;
+      totalSum += lineTotal;
+      aoa.push([idx+1, w.title||'', w.author||'', w.publisher||'', qty, price, lineTotal]);
+    });
+    aoa.push(['', '', '', '', '', '총 합계', totalSum]);
+
+    try{
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      ws['!merges'] = [{s:{r:0,c:0}, e:{r:0,c:6}}];
+      ws['!cols'] = [{wch:6},{wch:32},{wch:16},{wch:16},{wch:8},{wch:10},{wch:12}];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, '구입목록');
+      const fname = '희망도서_구입목록_'+today.getFullYear()+String(today.getMonth()+1).padStart(2,'0')+String(today.getDate()).padStart(2,'0')+'.xlsx';
       XLSX.writeFile(wb, fname);
     }catch(e){
       alert('엑셀 파일을 만드는 데 실패했어요. 다시 시도해주세요.');
