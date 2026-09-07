@@ -535,12 +535,22 @@
   .lib-wish-group:nth-child(4n+3){border-left-color:var(--leaf);}
   .lib-wish-group:nth-child(4n+4){border-left-color:var(--purple);}
   .lib-wish-group .meta{display:flex;flex-wrap:wrap;gap:8px;font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:10px;}
-  .bulk-status-row{
-    display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:#F1EEE6;border-radius:10px;
-    padding:9px 14px;margin-bottom:12px;font-size:13px;font-weight:700;color:var(--ink);
+
+  .wish-bulk-toolbar{
+    display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--ink);color:#fff;
+    border-radius:12px;padding:12px 16px;margin:14px 0;position:sticky;top:8px;z-index:5;
   }
-  .bulk-status-row select{padding:6px 10px;border:1.5px solid var(--ink);border-radius:8px;font-size:13px;font-weight:700;background:#fff;}
-  .select-all-label{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:13px;font-weight:700;cursor:pointer;}
+  .wish-bulk-toolbar .select-all-label{color:#fff;margin-left:0;}
+  .wish-bulk-toolbar .bulk-label{font-size:13px;font-weight:700;opacity:0.85;}
+  .wish-bulk-toolbar .bulk-status-btn{
+    background:#fff;color:var(--ink);border:none;padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:700;
+  }
+  .wish-bulk-toolbar .bulk-status-btn:hover{background:var(--sun-light);}
+  .wish-bulk-toolbar #wish-bulk-delete-btn{
+    margin-left:auto;background:var(--danger);color:#fff;border:none;padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:700;
+  }
+
+  .select-all-label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;cursor:pointer;}
   .select-all-label input{width:16px;height:16px;cursor:pointer;}
   .lib-wish-book{display:flex;gap:10px;padding:12px 0;border-top:1px dashed var(--line);align-items:flex-start;}
   .lib-wish-book:first-of-type{border-top:none;padding-top:0;}
@@ -550,22 +560,16 @@
   .lib-wish-book .book-body{flex:1;min-width:0;}
   .lib-wish-book .booktitle{font-weight:700;font-size:14.5px;word-break:break-word;}
   .lib-wish-book .author{font-size:12.5px;color:var(--muted);word-break:break-word;}
-  .lib-wish-book .reason{font-size:13px;color:var(--ink);margin-top:6px;}
-  .lib-wish-book .book-controls{display:flex;flex-direction:column;gap:6px;flex-shrink:0;width:96px;}
-  .lib-wish-book select{padding:7px 8px;border:1.5px solid var(--line);border-radius:8px;font-size:12.5px;width:100%;}
-  .group-save-row{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);}
-  .group-save-row .wish-save-btn{margin-left:auto;background:var(--coral);color:#fff;border:none;padding:9px 22px;border-radius:8px;font-size:13.5px;font-weight:700;}
-  .group-save-row .wish-del-selected-btn{background:var(--danger);color:#fff;border:none;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:700;}
+  .lib-wish-book .reason{font-size:12.5px;color:var(--ink);margin-top:6px;}
+  .lib-wish-book .status-badge{flex-shrink:0;}
 
   footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13px;}
 
   @media (max-width:680px){
+    .wish-bulk-toolbar{position:static;flex-direction:column;align-items:stretch;}
+    .wish-bulk-toolbar .bulk-status-btn,
+    .wish-bulk-toolbar #wish-bulk-delete-btn{width:100%;margin-left:0;}
     .lib-wish-book{flex-wrap:wrap;}
-    .lib-wish-book .book-controls{width:100%;flex-direction:row;margin-left:28px;}
-    .lib-wish-book .book-controls select{flex:1;}
-    .group-save-row{flex-direction:column;align-items:stretch;}
-    .group-save-row .wish-save-btn{margin-left:0;}
-    .group-save-row .saved-msg{text-align:center;}
     .lib-news-item{flex-direction:column;align-items:stretch;}
     .lib-news-item > div:last-child{display:flex;gap:8px;}
     .lib-news-item > div:last-child button{flex:1;}
@@ -878,6 +882,15 @@
           <div class="lib-toolbar" style="margin-top:10px;">
             <button type="button" id="lib-wish-export-btn" style="background:var(--leaf);color:#fff;border:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;">📊 엑셀로 내보내기</button>
             <a href="https://read365.edunet.net/PureScreen/SchoolSearch?schoolName=만수여자중학교&provCode=E10&neisCode=E100000623" target="_blank" rel="noopener" style="background:var(--sky);color:#fff;text-decoration:none;padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;display:inline-block;">📚 독서로에서 확인 ↗</a>
+          </div>
+          <div class="wish-bulk-toolbar" id="wish-bulk-toolbar">
+            <label class="select-all-label"><input type="checkbox" id="wish-select-all-global"> 전체 선택</label>
+            <span class="bulk-label">체크한 항목을 →</span>
+            <button type="button" class="bulk-status-btn" data-status="requested">신청됨</button>
+            <button type="button" class="bulk-status-btn" data-status="reviewing">검토중</button>
+            <button type="button" class="bulk-status-btn" data-status="purchased">구입완료</button>
+            <button type="button" class="bulk-status-btn" data-status="rejected">반려</button>
+            <button type="button" id="wish-bulk-delete-btn">🗑 선택 삭제</button>
           </div>
           <div class="lib-list" id="lib-wish-list"></div>
           <div class="catalog-pagination" id="lib-wish-pagination" style="margin-top:16px;"></div>
@@ -1977,121 +1990,21 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       const typeClass = g.applicantType === 'teacher' ? 'teacher' : 'student';
       return '<div class="lib-wish-group" data-key="'+escapeAttr(g.key)+'">'+
         '<div class="meta"><span class="applicant-badge '+typeClass+'">'+typeLabel+'</span><span>'+escapeHtml(g.studentId)+' '+escapeHtml(g.studentName)+'</span><span>·</span><span>'+fmtDate(g.createdAt)+'</span>'+(g.items.length>1?'<span>·</span><span>'+g.items.length+'권</span>':'')+'</div>'+
-        (g.items.length>1 ?
-          '<div class="bulk-status-row">'+
-            '<span>📌 전체 '+g.items.length+'권 한번에:</span>'+
-            '<select class="bulk-status-select"><option value="">상태 선택</option>'+
-              Object.keys(WISH_STATUS_LABEL).map(function(k){
-                return '<option value="'+k+'">'+WISH_STATUS_LABEL[k]+'</option>';
-              }).join('')+
-            '</select>'+
-            '<label class="select-all-label"><input type="checkbox" class="select-all-check"> 전체 선택</label>'+
-          '</div>' : ''
-        )+
         g.items.map(function(w, idx){
           return '<div class="lib-wish-book" data-id="'+w.id+'">'+
-            '<label class="book-check"><input type="checkbox" class="wish-del-check"></label>'+
+            '<label class="book-check"><input type="checkbox" class="wish-item-check"></label>'+
             (g.items.length>1 ? '<div class="num">'+(idx+1)+'.</div>' : '')+
             '<div class="book-body">'+
               '<div class="booktitle">'+escapeHtml(w.title)+'</div>'+
               '<div class="author">'+escapeHtml(w.author)+(w.publisher ? ' · '+escapeHtml(w.publisher) : '')+(w.pubYear ? ' · '+escapeHtml(w.pubYear) : '')+(w.price ? ' · '+escapeHtml(w.price)+'원' : '')+'</div>'+
-              (w.reason ? '<div class="reason">'+escapeHtml(w.reason)+'</div>' : '')+
-              '<textarea class="reject-reason-box" placeholder="반려 사유를 간단히 적어주세요 (학생에게 보여요)" style="width:100%;margin-top:10px;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;min-height:56px;'+(w.status==='rejected'?'':'display:none;')+'">'+escapeHtml(w.rejectReason||'')+'</textarea>'+
+              (w.reason ? '<div class="reason">신청 사유: '+escapeHtml(w.reason)+'</div>' : '')+
+              (w.status==='rejected' && w.rejectReason ? '<div class="reason" style="color:var(--danger);">반려 사유: '+escapeHtml(w.rejectReason)+'</div>' : '')+
             '</div>'+
-            '<div class="book-controls">'+
-              '<select class="wish-status-select">'+
-                Object.keys(WISH_STATUS_LABEL).map(function(k){
-                  return '<option value="'+k+'"'+(w.status===k?' selected':'')+'>'+WISH_STATUS_LABEL[k]+'</option>';
-                }).join('')+
-              '</select>'+
-            '</div>'+
+            '<span class="status-badge status-'+w.status+'">'+WISH_STATUS_LABEL[w.status]+'</span>'+
           '</div>';
         }).join('')+
-        '<div class="group-save-row">'+
-          '<button type="button" class="wish-del-selected-btn">선택 삭제</button>'+
-          '<span class="saved-msg">저장됐어요</span>'+
-          '<button class="wish-save-btn">저장</button>'+
-        '</div>'+
       '</div>';
     }).join('');
-
-    list.querySelectorAll('.lib-wish-group').forEach(function(groupEl){
-      const bulkSelect = groupEl.querySelector('.bulk-status-select');
-      if(bulkSelect){
-        bulkSelect.addEventListener('change', function(){
-          if(!bulkSelect.value) return;
-          groupEl.querySelectorAll('.wish-status-select').forEach(function(sel){
-            sel.value = bulkSelect.value;
-            sel.dispatchEvent(new Event('change'));
-          });
-        });
-      }
-      const selectAllCheck = groupEl.querySelector('.select-all-check');
-      if(selectAllCheck){
-        selectAllCheck.addEventListener('change', function(){
-          groupEl.querySelectorAll('.wish-del-check').forEach(function(cb){ cb.checked = selectAllCheck.checked; });
-        });
-      }
-      groupEl.querySelectorAll('.lib-wish-book').forEach(function(bookEl){
-        const statusSelect = bookEl.querySelector('.wish-status-select');
-        const reasonBox = bookEl.querySelector('.reject-reason-box');
-        statusSelect.addEventListener('change', function(){
-          reasonBox.style.display = (statusSelect.value === 'rejected') ? 'block' : 'none';
-        });
-      });
-      const delSelectedBtn = groupEl.querySelector('.wish-del-selected-btn');
-      delSelectedBtn.addEventListener('click', async function(){
-        const checkedBooks = Array.from(groupEl.querySelectorAll('.lib-wish-book')).filter(function(bookEl){
-          const cb = bookEl.querySelector('.wish-del-check');
-          return cb && cb.checked;
-        });
-        if(checkedBooks.length === 0){
-          alert('삭제할 책을 먼저 체크해주세요.');
-          return;
-        }
-        const wordCount = checkedBooks.length === 1 ? '이 책' : (checkedBooks.length+'권');
-        if(!confirm(wordCount+' 신청을 삭제할까요? 학생 화면에서도 사라져요.')) return;
-        const idsToDelete = checkedBooks.map(function(bookEl){ return bookEl.dataset.id; });
-        delSelectedBtn.disabled = true;
-        try{
-          wishes = await loadList(WISH_KEY);
-          wishes = wishes.filter(function(w){ return idsToDelete.indexOf(w.id) === -1; });
-          const ok = await saveList(WISH_KEY, wishes);
-          if(ok){
-            renderWishAdmin();
-            renderWishPublic();
-          }
-        }finally{ delSelectedBtn.disabled = false; }
-      });
-      const saveBtn = groupEl.querySelector('.wish-save-btn');
-      const savedMsg = groupEl.querySelector('.saved-msg');
-      saveBtn.addEventListener('click', async function(){
-        saveBtn.disabled = true;
-        try{
-          wishes = await loadList(WISH_KEY);
-          groupEl.querySelectorAll('.lib-wish-book').forEach(function(bookEl){
-            const id = bookEl.dataset.id;
-            const newStatus = bookEl.querySelector('.wish-status-select').value;
-            const reasonText = bookEl.querySelector('.reject-reason-box').value.trim();
-            const target = wishes.find(function(w){ return w.id === id; });
-            if(target){
-              target.status = newStatus;
-              target.rejectReason = (newStatus === 'rejected') ? reasonText : '';
-              target.reviewed = true;
-            }
-          });
-          const ok = await saveList(WISH_KEY, wishes);
-          if(ok){
-            savedMsg.style.display = 'inline';
-            setTimeout(function(){
-              savedMsg.style.display = 'none';
-              renderWishAdmin();
-            }, 700);
-            renderWishPublic();
-          }
-        }finally{ saveBtn.disabled = false; }
-      });
-    });
 
     if(pager){
       if(totalPages > 1){
@@ -2110,7 +2023,67 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
         pager.innerHTML = '';
       }
     }
+
+    const selectAllGlobal = document.getElementById('wish-select-all-global');
+    if(selectAllGlobal) selectAllGlobal.checked = false;
   }
+
+  document.getElementById('wish-select-all-global').addEventListener('change', function(){
+    const checked = this.checked;
+    document.querySelectorAll('#lib-wish-list .wish-item-check').forEach(function(cb){ cb.checked = checked; });
+  });
+
+  function getCheckedWishIds(){
+    return Array.from(document.querySelectorAll('#lib-wish-list .lib-wish-book')).filter(function(bookEl){
+      const cb = bookEl.querySelector('.wish-item-check');
+      return cb && cb.checked;
+    }).map(function(bookEl){ return bookEl.dataset.id; });
+  }
+
+  document.querySelectorAll('.bulk-status-btn').forEach(function(btn){
+    btn.addEventListener('click', async function(){
+      const ids = getCheckedWishIds();
+      if(ids.length === 0){ alert('먼저 항목을 체크해주세요.'); return; }
+      const newStatus = btn.dataset.status;
+      let reason = '';
+      if(newStatus === 'rejected'){
+        reason = prompt('반려 사유를 적어주세요 (선택, 비워두면 사유 없이 반려돼요). 체크한 '+ids.length+'건 모두에 적용돼요.', '') || '';
+      }
+      btn.disabled = true;
+      try{
+        wishes = await loadList(WISH_KEY);
+        wishes.forEach(function(w){
+          if(ids.indexOf(w.id) !== -1){
+            w.status = newStatus;
+            w.rejectReason = (newStatus === 'rejected') ? reason : '';
+            w.reviewed = true;
+          }
+        });
+        const ok = await saveList(WISH_KEY, wishes);
+        if(ok){
+          renderWishAdmin();
+          renderWishPublic();
+        }
+      }finally{ btn.disabled = false; }
+    });
+  });
+
+  document.getElementById('wish-bulk-delete-btn').addEventListener('click', async function(){
+    const ids = getCheckedWishIds();
+    if(ids.length === 0){ alert('먼저 항목을 체크해주세요.'); return; }
+    const label = ids.length === 1 ? '이 항목을' : (ids.length+'건을');
+    if(!confirm(label+' 삭제할까요? 학생 화면에서도 사라져요.')) return;
+    this.disabled = true;
+    try{
+      wishes = await loadList(WISH_KEY);
+      wishes = wishes.filter(function(w){ return ids.indexOf(w.id) === -1; });
+      const ok = await saveList(WISH_KEY, wishes);
+      if(ok){
+        renderWishAdmin();
+        renderWishPublic();
+      }
+    }finally{ this.disabled = false; }
+  });
   document.querySelectorAll('#wish-main-tabs button[data-maintab]').forEach(function(btn){
     btn.addEventListener('click', function(){
       document.querySelectorAll('#wish-main-tabs button[data-maintab]').forEach(function(b){b.classList.remove('active');});
