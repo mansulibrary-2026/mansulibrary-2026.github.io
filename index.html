@@ -1737,13 +1737,33 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       '</div>';
     }).join('');
   }
-  /* ---------------- ALADIN SEARCH (via Vercel proxy) ---------------- */
-  const ALADIN_PROXY_URL = 'https://aladin-proxy-eta.vercel.app/api/search';
+  /* ---------------- BOOK SEARCH (국립중앙도서관 ISBN 서지정보, via Vercel proxy) ---------------- */
+  const BOOK_SEARCH_PROXY_URL = 'https://aladin-proxy-eta.vercel.app/api/search-nl';
 
-  async function searchAladinViaProxy(query){
-    const res = await fetch(ALADIN_PROXY_URL + '?q=' + encodeURIComponent(query));
+  async function searchBooksViaProxy(query){
+    const res = await fetch(BOOK_SEARCH_PROXY_URL + '?q=' + encodeURIComponent(query));
     if(!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
+  }
+
+  function normalizeNlDoc(d){
+    const author = String(d.AUTHOR || '')
+      .replace(/^\s*저자\s*:\s*/, '')
+      .replace(/\s*지음/g, '')
+      .trim();
+    const priceRaw = String(d.REAL_PRICE || d.PRE_PRICE || '').replace(/[^0-9]/g, '');
+    const dateRaw = String(d.REAL_PUBLISH_DATE || d.PUBLISH_PREDATE || '');
+    const yearMatch = dateRaw.match(/^\d{4}/);
+    const form = String(d.FORM || '');
+    const isEbook = d.EBOOK_YN === 'Y' || /전자|온라인|다운로드/.test(form);
+    return {
+      title: String(d.TITLE || '').trim(),
+      author: author,
+      publisher: String(d.PUBLISHER || '').trim(),
+      pubYear: yearMatch ? yearMatch[0] : '',
+      price: priceRaw,
+      isEbook: isEbook
+    };
   }
 
   function normalizeTitleForMatch(s){
@@ -1767,19 +1787,21 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     this.disabled = true;
     aladinResultsBox.innerHTML = '<div class="empty-state">검색 중...</div>';
     try{
-      const data = await searchAladinViaProxy(q);
-      if(data.error || data.errorCode){
-        throw new Error(data.error || data.errorMessage || data.errorCode);
+      const data = await searchBooksViaProxy(q);
+      if(data.error){
+        throw new Error(data.error);
       }
-      const items = (data && data.item) || [];
+      const rawDocs = (data && data.docs) || [];
+      const items = rawDocs.map(normalizeNlDoc).filter(function(it){ return it.title; });
+      items.sort(function(a, b){ return (a.isEbook ? 1 : 0) - (b.isEbook ? 1 : 0); });
       if(items.length === 0){
         aladinResultsBox.innerHTML = '<div class="empty-state">검색 결과가 없어요. 직접 입력해주세요.</div>';
         return;
       }
       aladinResultsBox.innerHTML = items.map(function(it, idx){
         return '<div class="aladin-result-item" data-idx="'+idx+'">'+
-          (it.cover ? '<img src="'+it.cover+'" alt="">' : '')+
-          '<div class="info"><div class="t">'+escapeHtml(it.title||'')+'</div><div class="a">'+escapeHtml((it.author||'').replace(/\s*\([^)]*\)/g,'').trim())+' · '+escapeHtml(it.publisher||'')+'</div></div>'+
+          '<div class="info"><div class="t">'+escapeHtml(it.title)+(it.isEbook?' <span style="font-size:11px;color:var(--danger);font-weight:700;">[전자책]</span>':'')+'</div>'+
+          '<div class="a">'+escapeHtml(it.author)+(it.publisher?' · '+escapeHtml(it.publisher):'')+(it.pubYear?' · '+escapeHtml(it.pubYear):'')+(it.price?' · '+escapeHtml(it.price)+'원':'')+'</div></div>'+
           '<button type="button" class="pick-btn">선택</button>'+
         '</div>';
       }).join('');
@@ -1787,12 +1809,11 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
         const idx = Number(el.dataset.idx);
         el.querySelector('.pick-btn').addEventListener('click', function(){
           const it = items[idx];
-          document.getElementById('w-title').value = it.title || '';
-          document.getElementById('w-author').value = (it.author||'').replace(/\s*\([^)]*\)/g,'').trim();
-          document.getElementById('w-publisher').value = it.publisher || '';
-          const yearMatch = (it.pubDate||'').match(/^\d{4}/);
-          document.getElementById('w-pubyear').value = yearMatch ? yearMatch[0] : '';
-          document.getElementById('w-price').value = it.priceStandard || it.priceSales || '';
+          document.getElementById('w-title').value = it.title;
+          document.getElementById('w-author').value = it.author;
+          document.getElementById('w-publisher').value = it.publisher;
+          document.getElementById('w-pubyear').value = it.pubYear;
+          document.getElementById('w-price').value = it.price;
           aladinResultsBox.innerHTML = '';
           document.getElementById('w-search-input').value = '';
 
