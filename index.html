@@ -213,6 +213,9 @@
   .aladin-result-item .info{flex:1;min-width:0;}
   .aladin-result-item .t{font-size:13.5px;font-weight:700;}
   .aladin-result-item .a{font-size:12px;color:var(--muted);margin-top:2px;}
+  .aladin-result-item .y24-link{display:inline-block;margin-top:3px;font-size:11.5px;color:var(--sky);font-weight:700;text-decoration:underline;}
+  .book-source-note{margin-top:8px;font-size:11.5px;color:var(--muted);text-align:right;}
+  .book-source-note a{color:var(--muted);text-decoration:underline;}
   .aladin-result-item .pick-btn{background:var(--sky);color:#fff;border:none;padding:7px 13px;border-radius:8px;font-size:12.5px;font-weight:700;flex-shrink:0;}
   .search-row{display:flex;gap:8px;}
   .search-row input{flex:1;min-width:0;}
@@ -1766,6 +1769,51 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     };
   }
 
+  /* ---------------- 예스24 Open API (via Vercel proxy) ---------------- */
+  const YES24_PROXY_URL = 'https://aladin-proxy-eta.vercel.app/api/search-yes24';
+
+  async function searchYes24ViaProxy(query){
+    const res = await fetch(YES24_PROXY_URL + '?q=' + encodeURIComponent(query));
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  }
+
+  function extractYes24Items(data){
+    if(!data || data.success === false || !data.data) return [];
+    const d = data.data;
+    if(Array.isArray(d.items)) return d.items;
+    if(d.data && Array.isArray(d.data.items)) return d.data.items;
+    return [];
+  }
+
+  function normalizeYes24Item(d){
+    const priceNum = Number(d.shopPrice || d.salePrice || 0);
+    const yearMatch = String(d.publishDate || '').match(/\d{4}/);
+    return {
+      title: String(d.title || '').trim(),
+      author: String(d.author || '').trim(),
+      publisher: String(d.publisher || '').trim(),
+      pubYear: yearMatch ? yearMatch[0] : '',
+      price: priceNum > 0 ? String(Math.round(priceNum)) : '',
+      isEbook: false,
+      cover: String(d.cover || '').replace(/^http:/, 'https:'),
+      link: String(d.link || '').replace(/^http:/, 'https:')
+    };
+  }
+
+  async function fetchBookResults(q){
+    try{
+      const data = await searchYes24ViaProxy(q);
+      const items = extractYes24Items(data).map(normalizeYes24Item).filter(function(it){ return it.title; });
+      if(items.length > 0) return {source:'yes24', items:items};
+    }catch(e){ /* 예스24가 안 되면 국립중앙도서관으로 대신 검색 */ }
+    const data = await searchBooksViaProxy(q);
+    if(data.error) throw new Error(data.error);
+    const items = ((data && data.docs) || []).map(normalizeNlDoc).filter(function(it){ return it.title; });
+    items.sort(function(a, b){ return (a.isEbook ? 1 : 0) - (b.isEbook ? 1 : 0); });
+    return {source:'nl', items:items};
+  }
+
   function normalizeTitleForMatch(s){
     return (s||'').toLowerCase().replace(/\s+/g,'').replace(/[·:,\-()\[\]!?'"~]/g,'');
   }
@@ -1787,24 +1835,25 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     this.disabled = true;
     aladinResultsBox.innerHTML = '<div class="empty-state">검색 중...</div>';
     try{
-      const data = await searchBooksViaProxy(q);
-      if(data.error){
-        throw new Error(data.error);
-      }
-      const rawDocs = (data && data.docs) || [];
-      const items = rawDocs.map(normalizeNlDoc).filter(function(it){ return it.title; });
-      items.sort(function(a, b){ return (a.isEbook ? 1 : 0) - (b.isEbook ? 1 : 0); });
+      const result = await fetchBookResults(q);
+      const items = result.items;
       if(items.length === 0){
         aladinResultsBox.innerHTML = '<div class="empty-state">검색 결과가 없어요. 직접 입력해주세요.</div>';
         return;
       }
       aladinResultsBox.innerHTML = items.map(function(it, idx){
         return '<div class="aladin-result-item" data-idx="'+idx+'">'+
+          (it.cover ? '<img src="'+escapeAttr(it.cover)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">' : '')+
           '<div class="info"><div class="t">'+escapeHtml(it.title)+(it.isEbook?' <span style="font-size:11px;color:var(--danger);font-weight:700;">[전자책]</span>':'')+'</div>'+
-          '<div class="a">'+escapeHtml(it.author)+(it.publisher?' · '+escapeHtml(it.publisher):'')+(it.pubYear?' · '+escapeHtml(it.pubYear):'')+(it.price?' · '+escapeHtml(it.price)+'원':'')+'</div></div>'+
+          '<div class="a">'+escapeHtml(it.author)+(it.publisher?' · '+escapeHtml(it.publisher):'')+(it.pubYear?' · '+escapeHtml(it.pubYear):'')+(it.price?' · '+escapeHtml(it.price)+'원':'')+'</div>'+
+          (it.link ? '<a class="y24-link" href="'+escapeAttr(it.link)+'" target="_blank" rel="noopener">예스24에서 보기 ↗</a>' : '')+
+          '</div>'+
           '<button type="button" class="pick-btn">선택</button>'+
         '</div>';
-      }).join('');
+      }).join('') +
+      '<div class="book-source-note">'+(result.source === 'yes24'
+        ? '도서 정보 출처: <a href="https://www.yes24.com" target="_blank" rel="noopener">예스24</a>'
+        : '도서 정보 출처: 국립중앙도서관')+'</div>';
       aladinResultsBox.querySelectorAll('.aladin-result-item').forEach(function(el){
         const idx = Number(el.dataset.idx);
         el.querySelector('.pick-btn').addEventListener('click', function(){
