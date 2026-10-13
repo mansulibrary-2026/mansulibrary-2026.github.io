@@ -623,6 +623,49 @@
     .rsv-nav button{padding:7px 10px;font-size:12px;}
   }
 
+  /* ---------- 수업 예약 (2차 수정) ---------- */
+  .rsv-title{cursor:pointer;}
+  .rsv-cell.past{background:#F3F1EC;cursor:default;}
+  .rsv-cell.rejected{background:#FFF4F2;cursor:pointer;}
+  .rsv-cell.rejected:hover{background:#FFE9E5;}
+  .rsv-state{font-size:9.5px;font-weight:700;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rsv-state.st-pending{color:#8A6200;}
+  .rsv-state.st-approved{color:#1F6B47;}
+  .rsv-state.st-rejected{color:var(--danger);}
+  .rsv-cell.admin.taken.st-pending{background:#FBE9B7;}
+  .rsv-cell.admin.taken.st-approved{background:#DCE8D2;}
+  .rsv-cell.admin.taken.st-rejected{background:#F6D9D4;}
+  .arsv-summary{font-size:13px;font-weight:700;color:#8A6200;margin:2px 0 10px;}
+  .arsv-main{flex:1;min-width:0;}
+  .arsv-controls{display:flex;flex-direction:column;gap:6px;flex-shrink:0;width:118px;}
+  .arsv-controls select{width:100%;padding:7px 8px;font-size:12.5px;}
+  .arsv-item.st-pending{border-left-color:#E0A83A;}
+  .arsv-item.st-approved{border-left-color:#4CAF7D;}
+  .arsv-item.st-rejected{border-left-color:#C1473A;}
+  .arsv-detail{font-size:14px;line-height:1.8;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .arsv-modal-actions{display:flex;justify-content:space-between;gap:10px;margin-top:18px;}
+  .arsv-modal-actions button{border:none;border-radius:10px;padding:11px 22px;font-size:14px;font-weight:700;color:#fff;}
+  #arsv-modal-delete{background:var(--danger);}
+  #arsv-modal-save{background:var(--coral);}
+
+  /* ---------- 사서 화면 서브 탭 ---------- */
+  #lib-manage-area .lib-section{display:none;}
+  #lib-manage-area .lib-section.sub-active{display:block;}
+  .lib-subtabs{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 16px;}
+  .lib-subtabs button{
+    flex-shrink:0;background:#fff;border:2px solid var(--line);border-radius:999px;
+    padding:10px 16px;font-size:13.5px;font-weight:800;color:var(--muted);white-space:nowrap;
+  }
+  .lib-subtabs button.active{color:#fff;border-color:transparent;}
+  .lib-subtabs button[data-sub="wish"].active{background:#9C4F96;}
+  .lib-subtabs button[data-sub="reserve"].active{background:#8B5E3C;}
+  .lib-subtabs button[data-sub="question"].active{background:#3E5C88;}
+  .lib-subtabs button[data-sub="news"].active{background:#C9622C;}
+  .lib-subtabs button[data-sub="catalog"].active{background:#5B5FC7;}
+  .lib-subtabs button[data-sub="pin"].active{background:#B8862E;}
+  .lib-subtabs .badge{display:none;margin-left:6px;background:var(--danger);color:#fff;border-radius:999px;font-size:11px;padding:1px 7px;font-weight:800;}
+  .lib-subtabs .badge.show{display:inline-block;}
+
   footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13px;}
 
   @media (max-width:680px){
@@ -661,9 +704,9 @@
 <nav class="tabs">
   <div class="wrap">
     <button data-target="news" class="active">도서관 소식</button>
-    <button data-target="faq">자주 묻는 질문</button>
     <button data-target="wishlist">희망도서 신청</button>
     <button data-target="reserve">수업 예약</button>
+    <button data-target="faq">자주 묻는 질문</button>
     <button data-target="ask">나만의 도서관</button>
     <button data-target="librarian">사서 선생님</button>
   </div>
@@ -776,7 +819,7 @@
     <div class="section-head">
       <span class="tag">Class Reservation</span>
       <h2>도서관 수업 이용 예약</h2>
-      <p>수업이나 행사로 도서관을 쓰고 싶은 시간 칸을 눌러 신청해주세요. 오늘을 기준으로 앞뒤 3주까지 볼 수 있어요.</p>
+      <p>수업이나 행사로 도서관을 쓰고 싶은 시간 칸을 눌러 신청해주세요. 사서 선생님이 확인하면 "신청완료"로 바뀌어요. 오늘을 기준으로 앞뒤 3주까지 볼 수 있고, 지난 날짜는 볼 수만 있어요.</p>
     </div>
     <div class="card rsv-card">
       <div class="rsv-nav">
@@ -784,12 +827,17 @@
         <div class="rsv-title" id="rsv-title"></div>
         <button type="button" id="rsv-next">다음 주 ›</button>
       </div>
-      <div class="rsv-tools"><button type="button" id="rsv-today">이번 주로 돌아가기</button></div>
+      <div class="rsv-tools">
+        <label class="rsv-jump">📅 날짜 선택 <input type="date" id="rsv-jump"></label>
+        <button type="button" id="rsv-today">이번 주로 돌아가기</button>
+      </div>
       <div class="rsv-table-wrap" id="rsv-table"></div>
       <div class="rsv-legend">
         <span><i style="background:#fff"></i>신청 가능 (눌러서 신청)</span>
-        <span><i style="background:#CFCCC4"></i>이미 신청됨 (신청자 이름 표시)</span>
+        <span><i style="background:#CFCCC4"></i>신청됨 · (신청중) 확인 대기, (신청완료) 승인됨</span>
+        <span><i style="background:#F3F1EC"></i>지난 시간</span>
         <span><i style="background:repeating-linear-gradient(135deg,#E4E2DC,#E4E2DC 4px,#D2CFC7 4px,#D2CFC7 8px)"></i>이용 불가</span>
+        <span><i style="background:#FFF4F2"></i>(접수 거부) 표시 칸은 다시 신청할 수 있어요</span>
       </div>
       <p class="form-msg" id="rsv-notice" style="text-align:center;"></p>
     </div>
@@ -888,7 +936,16 @@
 
       <div id="lib-manage-area" style="display:none;">
 
-        <div class="lib-section sec-pin">
+        <div class="lib-subtabs" id="lib-subtabs">
+          <button type="button" data-sub="wish" class="active">🙋 희망도서<span class="badge"></span></button>
+          <button type="button" data-sub="reserve">📅 수업 예약<span class="badge"></span></button>
+          <button type="button" data-sub="question">💬 질문<span class="badge"></span></button>
+          <button type="button" data-sub="news">🌿 소식</button>
+          <button type="button" data-sub="catalog">📚 소장도서</button>
+          <button type="button" data-sub="pin">🔑 비밀번호</button>
+        </div>
+
+        <div class="lib-section sec-pin" data-sub="pin">
           <span class="sec-tag">🔑 학생 비밀번호 초기화</span>
           <p class="desc">학생이 질문방 비밀번호를 잊어버렸을 때, 학번을 입력하면 초기화돼요.</p>
           <div class="field-row" style="align-items:flex-end;">
@@ -898,7 +955,7 @@
           <p class="lib-setup-note" id="lib-reset-msg"></p>
         </div>
 
-        <div class="lib-section sec-catalog">
+        <div class="lib-section sec-catalog" data-sub="catalog">
           <span class="sec-tag">📚 소장 도서 개별 관리</span>
           <p class="desc">전체 목록은 엑셀로 갱신하지만, 책 한두 권이 바뀌었을 때는 여기서 바로 추가하거나 빼둘 수 있어요.</p>
 
@@ -924,7 +981,7 @@
           <div id="cat-removed-list" style="margin-top:14px;"></div>
         </div>
 
-        <div class="lib-section sec-news">
+        <div class="lib-section sec-news" data-sub="news">
           <span class="sec-tag">🌿 도서관 소식 관리</span>
           <div class="field-row">
             <div class="field"><label for="lib-news-title"><span class="ico">📝</span>제목<span class="req">*</span></label><input type="text" id="lib-news-title" placeholder="예: 7월 독서 골든벨 안내" maxlength="60"></div>
@@ -953,7 +1010,7 @@
           <div class="catalog-pagination" id="lib-news-pagination" style="margin-top:16px;"></div>
         </div>
 
-        <div class="lib-section sec-wish">
+        <div class="lib-section sec-wish" data-sub="wish">
           <span class="sec-tag">🙋 희망도서 관리</span>
           <div class="lib-toolbar">
             <input type="text" id="lib-wish-search" placeholder="학번, 이름, 책 제목으로 검색">
@@ -987,23 +1044,25 @@
           <div class="catalog-pagination" id="lib-wish-pagination" style="margin-top:16px;"></div>
         </div>
 
-        <div class="lib-section sec-reserve">
+        <div class="lib-section sec-reserve" data-sub="reserve">
           <span class="sec-tag">📅 수업 예약 관리</span>
-          <p class="desc">시간표 칸을 누르면 그 시간을 <b>닫거나 다시 열 수 있어요</b> (닫힌 칸은 이용자가 신청할 수 없어요). 요일(날짜)이나 교시 이름을 누르면 한꺼번에 처리돼요. 신청된 칸을 누르면 내용을 보고 삭제할 수 있어요.</p>
+          <p class="desc">신청된 칸을 누르면 내용을 보고 <b>승인(신청완료) · 접수 거부 · 삭제</b>를 할 수 있어요. 빈 칸을 누르면 그 시간을 <b>닫거나 다시 열 수 있고</b>(닫힌 칸은 이용자가 신청할 수 없어요), 날짜나 교시 이름을 누르면 한꺼번에 처리돼요.</p>
           <div class="rsv-nav">
             <button type="button" id="arsv-prev">‹ 이전 주</button>
             <div class="rsv-title" id="arsv-title"></div>
             <button type="button" id="arsv-next">다음 주 ›</button>
           </div>
           <div class="rsv-tools">
+            <label class="rsv-jump">📅 날짜 선택 <input type="date" id="arsv-jump"></label>
             <button type="button" id="arsv-today">이번 주로</button>
-            <label class="rsv-jump">날짜로 이동 <input type="date" id="arsv-jump"></label>
           </div>
           <div class="rsv-table-wrap" id="arsv-table"></div>
           <div class="rsv-legend">
             <span><i style="background:#fff"></i>열림 (누르면 닫기)</span>
             <span><i style="background:repeating-linear-gradient(135deg,#E4E2DC,#E4E2DC 4px,#D2CFC7 4px,#D2CFC7 8px)"></i>닫힘 (누르면 열기)</span>
-            <span><i style="background:#F4E3C8"></i>신청됨 (누르면 내용 확인·삭제)</span>
+            <span><i style="background:#FBE9B7"></i>신청중</span>
+            <span><i style="background:#DCE8D2"></i>신청완료</span>
+            <span><i style="background:#F6D9D4"></i>접수 거부</span>
           </div>
 
           <h4 class="arsv-list-title">📋 신청 내역 보기</h4>
@@ -1015,13 +1074,20 @@
               <option value="6m">6개월 전부터</option>
               <option value="12m">1년 전부터</option>
             </select>
+            <select id="arsv-status-filter" class="rsv-select">
+              <option value="all">상태 전체</option>
+              <option value="pending">신청중만</option>
+              <option value="approved">신청완료만</option>
+              <option value="rejected">접수 거부만</option>
+            </select>
             <input type="text" id="arsv-search" placeholder="이름·학년반·수업명으로 검색">
           </div>
+          <div class="arsv-summary" id="arsv-summary"></div>
           <div class="lib-list" id="arsv-list"></div>
           <div class="catalog-pagination" id="arsv-pagination" style="margin-top:16px;"></div>
         </div>
 
-        <div class="lib-section sec-question">
+        <div class="lib-section sec-question" data-sub="question">
           <span class="sec-tag">💬 질문 관리</span>
           <div class="lib-toolbar">
             <input type="text" id="lib-search" placeholder="학번 또는 이름으로 검색">
@@ -1034,9 +1100,9 @@
           <div class="lib-list" id="lib-list"></div>
         </div>
 
-        <div class="lib-section sec-footnote">
-          <span class="sec-tag">알라딘 도서검색 연동</span>
-          <p class="desc">희망도서 신청 폼의 책 제목 검색은 별도 서버(Vercel)를 통해 안전하게 연결되어 있어요. 알라딘 키는 그 서버에만 저장되어 있고, 이 페이지에는 저장되지 않아요. 별도로 설정하실 건 없어요.</p>
+        <div class="lib-section sec-footnote" data-sub="wish">
+          <span class="sec-tag">도서 검색 연동 정보</span>
+          <p class="desc">희망도서 신청 폼의 책 검색은 예스24에서 가져오고, 예스24가 안 될 때는 국립중앙도서관 검색으로 대신해요. 두 서비스의 인증키는 별도 서버(Vercel)의 환경변수에만 저장되어 있고 이 페이지에는 저장되지 않아요. 별도로 설정하실 건 없어요.</p>
         </div>
 
       </div>
@@ -1061,11 +1127,31 @@
     <h2 style="font-size:22px;margin-top:0;">도서관 이용 신청</h2>
     <div class="rsv-when" id="rsv-modal-when"></div>
     <div class="field" style="margin-bottom:12px;"><label for="rsv-name"><span class="ico">👤</span>신청자 이름<span class="req">*</span></label><input type="text" id="rsv-name" placeholder="예: 홍길동" maxlength="20"></div>
-    <div class="field" style="margin-bottom:12px;"><label for="rsv-group"><span class="ico">🏫</span>학년·반 / 교과 (선택)</label><input type="text" id="rsv-group" placeholder="예: 2학년 3반 국어" maxlength="30"></div>
+    <div class="field" style="margin-bottom:12px;"><label for="rsv-group"><span class="ico">🏫</span>학년 / 반 / 교과<span class="req">*</span></label><input type="text" id="rsv-group" placeholder="예: 2학년 3반 국어" maxlength="30"></div>
     <div class="field" style="margin-bottom:6px;"><label for="rsv-content"><span class="ico">📝</span>수업(행사)명<span class="req">*</span></label><input type="text" id="rsv-content" placeholder="예: 독서 토론 수업" maxlength="60"></div>
-    <p class="form-note" style="font-size:12px;color:var(--muted);margin-top:4px;">수업(행사)명은 사서 선생님만 볼 수 있어요. 다른 분들에게는 신청자 이름만 보여요.</p>
+    <p class="form-note" style="font-size:12px;color:var(--muted);margin-top:4px;">수업(행사)명과 학년·반·교과는 사서 선생님만 볼 수 있어요. 다른 분들에게는 신청자 이름과 처리 상태만 보여요.</p>
     <button class="primary-btn" id="rsv-submit-btn" style="display:block;width:100%;margin-top:16px;">신청하기</button>
     <p class="form-msg" id="rsv-msg"></p>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="arsv-modal">
+  <div class="modal-box" style="max-width:460px;padding:28px 26px 30px;">
+    <button class="modal-close" id="arsv-modal-close" aria-label="닫기">✕</button>
+    <h2 style="font-size:20px;margin-top:0;">신청 내용 확인</h2>
+    <div class="rsv-when" id="arsv-modal-when"></div>
+    <div class="arsv-detail" id="arsv-modal-detail"></div>
+    <div class="field" style="margin-top:14px;"><label for="arsv-modal-status">처리 상태</label>
+      <select id="arsv-modal-status" class="rsv-select" style="width:100%;">
+        <option value="pending">신청중 (확인 대기)</option>
+        <option value="approved">승인 (신청완료)</option>
+        <option value="rejected">접수 거부</option>
+      </select>
+    </div>
+    <div class="arsv-modal-actions">
+      <button type="button" id="arsv-modal-delete">삭제</button>
+      <button type="button" id="arsv-modal-save">저장</button>
+    </div>
   </div>
 </div>
 
@@ -2221,6 +2307,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   let wishAdminPage = 1;
 
   function updateWishMainTabBadge(){
+    updateLibTabBadges();
     const btn = document.querySelector('#wish-main-tabs button[data-maintab="unreviewed"]');
     if(!btn) return;
     const count = wishes.filter(function(w){ return !isWishReviewed(w); }).length;
@@ -2441,16 +2528,21 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
 
   /* ---------------- CLASS RESERVATION (도서관 수업 이용 예약) ---------------- */
   const RSV_PERIODS = [
-    {n:1, t:'09:00'}, {n:2, t:'09:55'}, {n:3, t:'10:50'}, {n:4, t:'11:45'},
+    {id:'1', t:'09:00'}, {id:'2', t:'09:55'}, {id:'3', t:'10:50'}, {id:'4', t:'11:45'},
     {lunch:true, label:'점심시간'},
-    {n:5, t:'13:30'}, {n:6, t:'14:25'}, {n:7, t:'15:20'}, {n:8, t:'16:15'}
+    {id:'5', t:'13:30'}, {id:'6', t:'14:25'},
+    {id:'after', t:'15:10', label:'방과후'}
   ];
   const RSV_WEEKDAYS = ['일','월','화','수','목','금','토'];
-  const RSV_PUB = 'rsvpub_';   // 누구나 볼 수 있는 정보(날짜·교시·신청자 이름)
-  const RSV_DET = 'rsvdet_';   // 사서만 보는 상세 정보(학년반·수업명)
+  const RSV_PUB = 'rsvpub_';   // 누구나 볼 수 있는 정보(날짜·교시·신청자 이름·처리 상태)
+  const RSV_DET = 'rsvdet_';   // 사서만 보는 상세 정보(학년·반·교과, 수업명)
   const RSV_BLK = 'rsvblk_';   // 이용 불가로 닫아둔 칸
   const RSV_USER_WEEKS = 3;
   const RSV_ADMIN_WEEKS = 52;
+  const RSV_STATUS_TEXT = {pending:'신청중', approved:'신청완료', rejected:'접수 거부'};
+
+  // 상태 값이 없는 예전 예약은 이미 확정된 것으로 봐요
+  function rsvStatusOf(d){ return (d && d.status) || 'approved'; }
 
   function rsvISO(d){
     return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -2467,7 +2559,17 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     return x;
   }
   function rsvDayText(d){ return (d.getMonth()+1)+'.'+d.getDate()+'('+RSV_WEEKDAYS[d.getDay()]+')'; }
-  function rsvPeriodInfo(n){ return RSV_PERIODS.find(function(p){ return p.n === n; }); }
+  function rsvPeriodInfo(id){ return RSV_PERIODS.find(function(p){ return !p.lunch && p.id === String(id); }); }
+  function rsvPeriodLabel(id){ const p = rsvPeriodInfo(id); return (p && p.label) ? p.label : id+'교시'; }
+  function rsvPeriodTime(id){
+    const p = rsvPeriodInfo(id);
+    if(!p) return '';
+    return String(id) === 'after' ? p.t+'~' : p.t;
+  }
+  function rsvSlotText(dateISO, period){
+    const time = rsvPeriodTime(period);
+    return rsvDayText(rsvParse(dateISO))+' '+rsvPeriodLabel(period)+(time ? ' ('+time+')' : '');
+  }
   const rsvThisMonday = rsvMonday(new Date());
   function rsvWeekOffset(ws){ return Math.round((ws.getTime() - rsvThisMonday.getTime()) / (7*24*3600*1000)); }
   function rsvWeekTitle(ws){
@@ -2505,19 +2607,27 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     h += '</tr></thead><tbody>';
     RSV_PERIODS.forEach(function(p){
       if(p.lunch){ h += '<tr class="rsv-lunch"><td colspan="6">'+p.label+'</td></tr>'; return; }
-      h += '<tr><th class="rsv-periodhead'+(admin?' clickable':'')+'" data-period="'+p.n+'">'+p.n+'교시<small>'+p.t+'</small></th>';
+      h += '<tr><th class="rsv-periodhead'+(admin?' clickable':'')+'" data-period="'+p.id+'">'+(p.label || (p.id+'교시'))+'<small>'+rsvPeriodTime(p.id)+'</small></th>';
       for(let i=0; i<5; i++){
-        const iso = rsvISO(rsvAddDays(ws, i)), key = iso+'_'+p.n;
-        const attrs = ' data-date="'+iso+'" data-period="'+p.n+'" data-key="'+key+'"';
-        if(data.pub[key]){
+        const iso = rsvISO(rsvAddDays(ws, i)), key = iso+'_'+p.id;
+        const attrs = ' data-date="'+iso+'" data-period="'+p.id+'" data-key="'+key+'"';
+        const isPast = !admin && iso < todayISO;
+        const pub = data.pub[key];
+        if(pub){
+          const st = rsvStatusOf(pub);
+          const stText = '('+RSV_STATUS_TEXT[st]+')';
           if(admin){
             const det = data.det[key] || {};
-            h += '<td class="rsv-cell taken admin"'+attrs+'><div class="rsv-name">'+escapeHtml(data.pub[key].name)+'</div><div class="rsv-sub">'+escapeHtml(det.content||'')+'</div></td>';
+            h += '<td class="rsv-cell taken admin st-'+st+'"'+attrs+'><div class="rsv-name">'+escapeHtml(pub.name)+'</div><div class="rsv-state st-'+st+'">'+stText+'</div><div class="rsv-sub">'+escapeHtml(det.content||'')+'</div></td>';
+          }else if(st === 'rejected'){
+            h += '<td class="rsv-cell rejected'+(isPast?' past':'')+'"'+attrs+'><div class="rsv-name">'+escapeHtml(pub.name)+'</div><div class="rsv-state st-rejected">'+stText+'</div></td>';
           }else{
-            h += '<td class="rsv-cell taken"'+attrs+'><div class="rsv-name">'+escapeHtml(data.pub[key].name)+'</div></td>';
+            h += '<td class="rsv-cell taken"'+attrs+'><div class="rsv-name">'+escapeHtml(pub.name)+'</div><div class="rsv-state st-'+st+'">'+stText+'</div></td>';
           }
         }else if(data.blk[key]){
           h += '<td class="rsv-cell blocked'+(admin?' admin':'')+'"'+attrs+'>'+(admin?'닫힘':'')+'</td>';
+        }else if(isPast){
+          h += '<td class="rsv-cell past"'+attrs+'></td>';
         }else{
           h += '<td class="rsv-cell open'+(admin?' admin':'')+'"'+attrs+'>'+(admin?'':'＋')+'</td>';
         }
@@ -2527,10 +2637,24 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     return h + '</tbody></table>';
   }
 
+  function rsvWireTitlePicker(titleId, inputId){
+    const t = document.getElementById(titleId), i = document.getElementById(inputId);
+    t.title = '눌러서 날짜를 골라 이동해요';
+    t.addEventListener('click', function(){
+      try{ i.showPicker(); }catch(e){ i.focus(); }
+    });
+  }
+
   /* ----- 이용자 화면 ----- */
   let rsvWeekStart = rsvMonday(new Date());
   let rsvLoadToken = 0;
   let rsvPending = null;
+
+  function rsvClampUserWeek(ws){
+    const min = rsvAddDays(rsvThisMonday, -7*RSV_USER_WEEKS);
+    const max = rsvAddDays(rsvThisMonday, 7*RSV_USER_WEEKS);
+    return ws < min ? min : (ws > max ? max : ws);
+  }
 
   async function renderRsvUser(){
     const box = document.getElementById('rsv-table');
@@ -2546,8 +2670,8 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       const data = await fetchRsvWeek(ws, false);
       if(token !== rsvLoadToken) return;
       box.innerHTML = buildRsvTable(ws, data, 'user');
-      box.querySelectorAll('.rsv-cell.open').forEach(function(td){
-        td.addEventListener('click', function(){ openRsvModal(td.dataset.date, Number(td.dataset.period)); });
+      box.querySelectorAll('.rsv-cell.open, .rsv-cell.rejected:not(.past)').forEach(function(td){
+        td.addEventListener('click', function(){ openRsvModal(td.dataset.date, td.dataset.period); });
       });
     }catch(e){
       if(token !== rsvLoadToken) return;
@@ -2566,11 +2690,23 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   document.getElementById('rsv-today').addEventListener('click', function(){
     rsvWeekStart = rsvMonday(new Date()); renderRsvUser();
   });
+  (function(){
+    const jump = document.getElementById('rsv-jump');
+    jump.min = rsvISO(rsvAddDays(rsvThisMonday, -7*RSV_USER_WEEKS));
+    jump.max = rsvISO(rsvAddDays(rsvThisMonday, 7*RSV_USER_WEEKS+6));
+    jump.addEventListener('change', function(){
+      if(!jump.value) return;
+      rsvWeekStart = rsvClampUserWeek(rsvMonday(rsvParse(jump.value)));
+      renderRsvUser();
+    });
+    rsvWireTitlePicker('rsv-title', 'rsv-jump');
+  })();
 
   const rsvModal = document.getElementById('rsv-modal');
   function openRsvModal(dateISO, period){
-    rsvPending = {date: dateISO, period: period};
-    document.getElementById('rsv-modal-when').textContent = rsvDayText(rsvParse(dateISO))+' · '+period+'교시 ('+rsvPeriodInfo(period).t+')';
+    if(dateISO < rsvISO(new Date())) return;
+    rsvPending = {date: dateISO, period: String(period)};
+    document.getElementById('rsv-modal-when').textContent = rsvSlotText(dateISO, period);
     document.getElementById('rsv-group').value = '';
     document.getElementById('rsv-content').value = '';
     const msg = document.getElementById('rsv-msg');
@@ -2583,6 +2719,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   rsvModal.addEventListener('click', function(e){ if(e.target === rsvModal) closeRsvModal(); });
 
   async function createReservation(dateISO, period, info){
+    if(dateISO < rsvISO(new Date())) return {ok:false, reason:'past'};
     const id = dateISO+'_'+period;
     const pubRef = __db.collection('library').doc(RSV_PUB+id);
     const detRef = __db.collection('library').doc(RSV_DET+id);
@@ -2591,10 +2728,11 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     return await __db.runTransaction(async function(tx){
       const pubSnap = await tx.get(pubRef);
       const blkSnap = await tx.get(blkRef);
-      if(pubSnap.exists) return {ok:false, reason:'taken'};
+      // 접수 거부된 칸은 다시 신청할 수 있어요
+      if(pubSnap.exists && rsvStatusOf(pubSnap.data()) !== 'rejected') return {ok:false, reason:'taken'};
       if(blkSnap.exists) return {ok:false, reason:'blocked'};
-      tx.set(pubRef, {date:dateISO, period:period, name:info.name, createdAt:nowIso});
-      tx.set(detRef, {date:dateISO, period:period, name:info.name, group:info.group, content:info.content, createdAt:nowIso});
+      tx.set(pubRef, {date:dateISO, period:period, name:info.name, status:'pending', createdAt:nowIso});
+      tx.set(detRef, {date:dateISO, period:period, name:info.name, group:info.group, content:info.content, status:'pending', createdAt:nowIso});
       return {ok:true};
     });
   }
@@ -2605,8 +2743,8 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     const group = document.getElementById('rsv-group').value.trim();
     const content = document.getElementById('rsv-content').value.trim();
     const msg = document.getElementById('rsv-msg');
-    if(!name || !content){
-      msg.textContent = '신청자 이름과 수업(행사)명은 꼭 입력해주세요.';
+    if(!name || !group || !content){
+      msg.textContent = '신청자 이름, 학년·반·교과, 수업(행사)명은 모두 꼭 입력해주세요.';
       msg.className = 'form-msg err';
       return;
     }
@@ -2616,22 +2754,25 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       const target = rsvPending;
       const res = await createReservation(target.date, target.period, {name:name, group:group, content:content});
       if(!res.ok){
-        msg.textContent = res.reason === 'taken'
-          ? '방금 다른 분이 먼저 신청한 시간이에요. 다른 시간을 골라주세요.'
-          : '이 시간은 지금 신청할 수 없게 닫혀 있어요.';
+        const texts = {
+          taken: '방금 다른 분이 먼저 신청한 시간이에요. 다른 시간을 골라주세요.',
+          blocked: '이 시간은 지금 신청할 수 없게 닫혀 있어요.',
+          past: '지난 날짜는 신청할 수 없어요.'
+        };
+        msg.textContent = texts[res.reason] || '신청할 수 없는 시간이에요.';
         msg.className = 'form-msg err';
         renderRsvUser();
         return;
       }
       closeRsvModal();
       const notice = document.getElementById('rsv-notice');
-      notice.textContent = rsvDayText(rsvParse(target.date))+' '+target.period+'교시 신청이 접수됐어요!';
+      notice.textContent = rsvSlotText(target.date, target.period)+' 신청이 접수됐어요! 사서 선생님이 확인하면 "신청완료"로 바뀌어요.';
       notice.className = 'form-msg ok';
-      setTimeout(function(){ notice.textContent = ''; notice.className = 'form-msg'; }, 6000);
+      setTimeout(function(){ notice.textContent = ''; notice.className = 'form-msg'; }, 8000);
       sendNotificationEmail(
-        name + (group ? ' ('+group+')' : ''),
+        name + ' ('+group+')',
         '도서관 수업 예약',
-        rsvDayText(rsvParse(target.date))+' '+target.period+'교시 · '+content
+        rsvSlotText(target.date, target.period)+' · '+content
       );
       renderRsvUser();
     }catch(e){
@@ -2648,6 +2789,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   let arsvLoadToken = 0;
   let arsvListItems = [];
   let arsvListPage = 1;
+  let arsvModalKey = null;
   const ARSV_PAGE_SIZE = 10;
 
   function arsvClampWeek(ws){
@@ -2674,25 +2816,25 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       arsvData = data;
       box.innerHTML = buildRsvTable(ws, data, 'admin');
       box.querySelectorAll('.rsv-cell.open').forEach(function(td){
-        td.addEventListener('click', function(){ arsvSetBlocks([{date:td.dataset.date, period:Number(td.dataset.period)}], true); });
+        td.addEventListener('click', function(){ arsvSetBlocks([{date:td.dataset.date, period:td.dataset.period}], true); });
       });
       box.querySelectorAll('.rsv-cell.blocked').forEach(function(td){
-        td.addEventListener('click', function(){ arsvSetBlocks([{date:td.dataset.date, period:Number(td.dataset.period)}], false); });
+        td.addEventListener('click', function(){ arsvSetBlocks([{date:td.dataset.date, period:td.dataset.period}], false); });
       });
       box.querySelectorAll('.rsv-cell.taken').forEach(function(td){
         td.addEventListener('click', function(){ arsvShowDetail(td.dataset.key); });
       });
       box.querySelectorAll('.rsv-dayhead.clickable').forEach(function(th){
         th.addEventListener('click', function(){
-          const slots = RSV_PERIODS.filter(function(p){ return !p.lunch; }).map(function(p){ return {date:th.dataset.date, period:p.n}; });
+          const slots = RSV_PERIODS.filter(function(p){ return !p.lunch; }).map(function(p){ return {date:th.dataset.date, period:p.id}; });
           arsvBulkToggle(slots, rsvDayText(rsvParse(th.dataset.date))+' 하루 전체');
         });
       });
       box.querySelectorAll('.rsv-periodhead.clickable').forEach(function(th){
         th.addEventListener('click', function(){
-          const n = Number(th.dataset.period);
-          const slots = [0,1,2,3,4].map(function(i){ return {date:rsvISO(rsvAddDays(ws, i)), period:n}; });
-          arsvBulkToggle(slots, '이번 주 '+n+'교시 전체');
+          const pid = th.dataset.period;
+          const slots = [0,1,2,3,4].map(function(i){ return {date:rsvISO(rsvAddDays(ws, i)), period:pid}; });
+          arsvBulkToggle(slots, '이 주 '+rsvPeriodLabel(pid)+' 전체');
         });
       });
     }catch(e){
@@ -2742,20 +2884,54 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     }
   }
 
-  async function arsvShowDetail(key){
+  async function arsvSetStatus(dateISO, period, status){
+    try{
+      const batch = __db.batch();
+      batch.set(__db.collection('library').doc(RSV_PUB+dateISO+'_'+period), {status:status}, {merge:true});
+      batch.set(__db.collection('library').doc(RSV_DET+dateISO+'_'+period), {status:status}, {merge:true});
+      await batch.commit();
+      return true;
+    }catch(e){
+      alert('저장에 실패했어요. 다시 시도해주세요.');
+      return false;
+    }
+  }
+
+  const arsvModal = document.getElementById('arsv-modal');
+  function arsvShowDetail(key){
     const pub = arsvData.pub[key];
     if(!pub) return;
     const det = arsvData.det[key] || {};
-    const text = rsvDayText(rsvParse(pub.date))+' '+pub.period+'교시 ('+rsvPeriodInfo(pub.period).t+')\n'+
-      '신청자: '+pub.name+(det.group ? ' ('+det.group+')' : '')+'\n'+
-      '수업(행사)명: '+(det.content || '-')+'\n\n'+
-      '이 예약을 삭제할까요? (삭제하면 그 시간이 다시 열려요)';
-    if(!confirm(text)) return;
-    if(await arsvDeleteReservation(pub.date, pub.period)){
-      renderAdminRsvWeek();
-      loadAdminRsvList();
-    }
+    arsvModalKey = key;
+    document.getElementById('arsv-modal-when').textContent = rsvSlotText(pub.date, pub.period);
+    document.getElementById('arsv-modal-detail').innerHTML =
+      '신청자: <b>'+escapeHtml(pub.name)+'</b><br>'+
+      '학년·반·교과: '+escapeHtml(det.group || '-')+'<br>'+
+      '수업(행사)명: '+escapeHtml(det.content || '-')+'<br>'+
+      '<span style="color:var(--muted);font-size:12px;">접수: '+(pub.createdAt ? new Date(pub.createdAt).toLocaleString('ko-KR') : '-')+'</span>';
+    document.getElementById('arsv-modal-status').value = rsvStatusOf(pub);
+    arsvModal.classList.add('show');
   }
+  function closeArsvModal(){ arsvModal.classList.remove('show'); arsvModalKey = null; }
+  document.getElementById('arsv-modal-close').addEventListener('click', closeArsvModal);
+  arsvModal.addEventListener('click', function(e){ if(e.target === arsvModal) closeArsvModal(); });
+  document.getElementById('arsv-modal-save').addEventListener('click', async function(){
+    const pub = arsvData.pub[arsvModalKey];
+    if(!pub){ closeArsvModal(); return; }
+    const status = document.getElementById('arsv-modal-status').value;
+    this.disabled = true;
+    const ok = await arsvSetStatus(pub.date, pub.period, status);
+    this.disabled = false;
+    if(ok){ closeArsvModal(); renderAdminRsvWeek(); loadAdminRsvList(); }
+  });
+  document.getElementById('arsv-modal-delete').addEventListener('click', async function(){
+    const pub = arsvData.pub[arsvModalKey];
+    if(!pub){ closeArsvModal(); return; }
+    if(!confirm(rsvSlotText(pub.date, pub.period)+' 예약을 삭제할까요? (삭제하면 그 시간이 다시 열려요)')) return;
+    if(await arsvDeleteReservation(pub.date, pub.period)){
+      closeArsvModal(); renderAdminRsvWeek(); loadAdminRsvList();
+    }
+  });
 
   function arsvRangeStartISO(range){
     const d = new Date();
@@ -2790,9 +2966,16 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   function renderAdminRsvList(){
     const listEl = document.getElementById('arsv-list');
     const pager = document.getElementById('arsv-pagination');
+    const summary = document.getElementById('arsv-summary');
     if(!listEl) return;
+    updateLibTabBadges();
+    const todayISO = rsvISO(new Date());
+    const pendingCount = arsvListItems.filter(function(it){ return rsvStatusOf(it) === 'pending' && it.date >= todayISO; }).length;
+    summary.textContent = pendingCount > 0 ? '⏳ 확인을 기다리는 신청이 '+pendingCount+'건 있어요' : '';
     const q = document.getElementById('arsv-search').value.trim().toLowerCase();
+    const sf = document.getElementById('arsv-status-filter').value;
     const items = arsvListItems.filter(function(it){
+      if(sf !== 'all' && rsvStatusOf(it) !== sf) return false;
       if(!q) return true;
       return (it.name||'').toLowerCase().includes(q) || (it.group||'').toLowerCase().includes(q) || (it.content||'').toLowerCase().includes(q);
     });
@@ -2807,18 +2990,33 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     const pageItems = items.slice((arsvListPage-1)*ARSV_PAGE_SIZE, arsvListPage*ARSV_PAGE_SIZE);
     const weekAgo = Date.now() - 7*24*3600*1000;
     listEl.innerHTML = pageItems.map(function(it){
+      const st = rsvStatusOf(it);
       const isNew = it.createdAt && new Date(it.createdAt).getTime() > weekAgo;
-      return '<div class="arsv-item" data-date="'+escapeAttr(it.date)+'" data-period="'+it.period+'">'+
-        '<div><div class="when">'+rsvDayText(rsvParse(it.date))+' · '+it.period+'교시 ('+(rsvPeriodInfo(it.period)||{t:''}).t+')'+(isNew?'<span class="new-tag">NEW</span>':'')+'</div>'+
+      return '<div class="arsv-item st-'+st+'" data-date="'+escapeAttr(it.date)+'" data-period="'+escapeAttr(String(it.period))+'">'+
+        '<div class="arsv-main"><div class="when">'+escapeHtml(rsvSlotText(it.date, it.period))+(isNew?'<span class="new-tag">NEW</span>':'')+'</div>'+
         '<div class="who">'+escapeHtml(it.name)+(it.group ? ' <span style="font-weight:600;color:var(--muted);">('+escapeHtml(it.group)+')</span>' : '')+'</div>'+
         '<div class="what">'+escapeHtml(it.content||'')+'</div></div>'+
-        '<button type="button" class="arsv-del">삭제</button>'+
+        '<div class="arsv-controls">'+
+          '<select class="rsv-select arsv-status">'+
+            ['pending','approved','rejected'].map(function(k){
+              const label = k === 'pending' ? '신청중' : (k === 'approved' ? '승인(신청완료)' : '접수 거부');
+              return '<option value="'+k+'"'+(st===k?' selected':'')+'>'+label+'</option>';
+            }).join('')+
+          '</select>'+
+          '<button type="button" class="arsv-del">삭제</button>'+
+        '</div>'+
       '</div>';
     }).join('');
     listEl.querySelectorAll('.arsv-item').forEach(function(el){
+      const date = el.dataset.date, period = el.dataset.period;
+      el.querySelector('.arsv-status').addEventListener('change', async function(){
+        this.disabled = true;
+        const ok = await arsvSetStatus(date, period, this.value);
+        if(ok){ renderAdminRsvWeek(); loadAdminRsvList(); }
+        else this.disabled = false;
+      });
       el.querySelector('.arsv-del').addEventListener('click', async function(){
-        const date = el.dataset.date, period = Number(el.dataset.period);
-        if(!confirm(rsvDayText(rsvParse(date))+' '+period+'교시 예약을 삭제할까요? (삭제하면 그 시간이 다시 열려요)')) return;
+        if(!confirm(rsvSlotText(date, period)+' 예약을 삭제할까요? (삭제하면 그 시간이 다시 열려요)')) return;
         if(await arsvDeleteReservation(date, period)){
           renderAdminRsvWeek();
           loadAdminRsvList();
@@ -2860,9 +3058,38 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       arsvWeekStart = arsvClampWeek(rsvMonday(rsvParse(jump.value)));
       renderAdminRsvWeek();
     });
+    rsvWireTitlePicker('arsv-title', 'arsv-jump');
   })();
   document.getElementById('arsv-range').addEventListener('change', loadAdminRsvList);
+  document.getElementById('arsv-status-filter').addEventListener('change', function(){ arsvListPage = 1; renderAdminRsvList(); });
   document.getElementById('arsv-search').addEventListener('input', function(){ arsvListPage = 1; renderAdminRsvList(); });
+
+  /* ----- 사서 화면 서브 탭 ----- */
+  function updateLibTabBadges(){
+    function setBadge(sub, n){
+      const b = document.querySelector('#lib-subtabs button[data-sub="'+sub+'"] .badge');
+      if(!b) return;
+      b.textContent = n;
+      b.classList.toggle('show', n > 0);
+    }
+    setBadge('wish', (wishes || []).filter(function(w){ return !isWishReviewed(w); }).length);
+    setBadge('question', (questions || []).filter(function(q){ return q.status !== 'answered'; }).length);
+    const todayISO = rsvISO(new Date());
+    setBadge('reserve', (arsvListItems || []).filter(function(it){ return rsvStatusOf(it) === 'pending' && it.date >= todayISO; }).length);
+  }
+
+  function activateLibSub(key){
+    document.querySelectorAll('#lib-subtabs button').forEach(function(b){
+      b.classList.toggle('active', b.dataset.sub === key);
+    });
+    document.querySelectorAll('#lib-manage-area .lib-section').forEach(function(sec){
+      sec.classList.toggle('sub-active', sec.dataset.sub === key);
+    });
+    if(key === 'reserve'){ renderAdminRsvWeek(); loadAdminRsvList(); }
+  }
+  document.querySelectorAll('#lib-subtabs button').forEach(function(b){
+    b.addEventListener('click', function(){ activateLibSub(b.dataset.sub); });
+  });
 
   /* ---------------- GATE / CHAT ---------------- */
   const gateCard = document.getElementById('gate-card');
@@ -3119,6 +3346,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     libUnlocked = true;
     libLoginArea.style.display = 'none';
     libManageArea.style.display = 'block';
+    activateLibSub('wish');
     news = await loadNewsCollection();
     wishes = await loadList(WISH_KEY);
     questions = await loadList(INQUIRY_KEY);
@@ -3129,8 +3357,8 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     renderLibList();
     renderCatalogAddedList();
     renderCatalogRemovedList();
-    renderAdminRsvWeek();
     loadAdminRsvList();
+    updateLibTabBadges();
   }
 
   document.querySelectorAll('.filters button[data-libfilter]').forEach(function(btn){
@@ -3147,6 +3375,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   });
 
   function renderLibList(){
+    updateLibTabBadges();
     if(!libUnlocked) return;
     const list = document.getElementById('lib-list');
     let filtered = questions;
