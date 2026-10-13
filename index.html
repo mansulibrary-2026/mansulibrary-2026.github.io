@@ -707,6 +707,9 @@
   .aday-modes label span{font-size:12px;font-weight:500;color:var(--muted);}
   @media (max-width:680px){ .rsv-cell.closedday{font-size:12px;} }
 
+  /* ---------- 나만의 도서관 입장 화면: 비밀번호 안내 (빨간 글씨, 입력칸 안 '예: 30115'와 같은 크기) ---------- */
+  #gate-card .gate-pin-note{font-size:15px;color:var(--danger);margin-top:10px;line-height:1.6;}
+
   footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13px;}
 
   @media (max-width:680px){
@@ -921,7 +924,7 @@
         <div class="field"><label for="g-name"><span class="ico">👤</span>이름</label><input type="text" id="g-name" placeholder="예: 홍길동" maxlength="10"></div>
         <div class="field" style="max-width:140px;"><label for="g-pin"><span class="ico">🔒</span>비밀번호(4자리)</label><input type="password" id="g-pin" inputmode="numeric" pattern="[0-9]*" placeholder="●●●●" maxlength="4"></div>
       </div>
-      <p class="lib-setup-note">처음 입장할 때 입력한 4자리 번호가 앞으로 비밀번호가 돼요. 잊어버렸다면 사서 선생님께 초기화를 요청하세요.</p>
+      <p class="lib-setup-note gate-pin-note">비밀번호 4자리는 본인이 설정합니다. 처음 설정한 비밀번호로 계속 이용 가능합니다. 비밀번호를 잊어버렸다면 사서선생님께 초기화를 요청하세요.</p>
       <button class="primary-btn" id="gate-btn">나만의 도서관 열기</button>
       <p class="form-msg err" id="gate-err" style="display:none;">학번, 이름, 4자리 비밀번호를 모두 입력해주세요.</p>
     </div>
