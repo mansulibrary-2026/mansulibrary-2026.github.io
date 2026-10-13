@@ -214,6 +214,10 @@
   .aladin-result-item .t{font-size:13.5px;font-weight:700;}
   .aladin-result-item .a{font-size:12px;color:var(--muted);margin-top:2px;}
   .aladin-result-item .y24-link{display:inline-block;margin-top:3px;font-size:11.5px;color:var(--sky);font-weight:700;text-decoration:underline;}
+  .search-options{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .search-options select{padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:12.5px;font-weight:700;background:#fff;}
+  .more-results-btn{display:block;width:100%;margin-top:4px;padding:11px;background:#fff;border:1.5px dashed var(--sky);border-radius:10px;color:var(--sky);font-size:13.5px;font-weight:700;}
+  .more-results-btn:disabled{opacity:.6;}
   .book-source-note{margin-top:8px;font-size:11.5px;color:var(--muted);text-align:right;}
   .book-source-note a{color:var(--muted);text-decoration:underline;}
   .aladin-result-item .pick-btn{background:var(--sky);color:#fff;border:none;padding:7px 13px;border-radius:8px;font-size:12.5px;font-weight:700;flex-shrink:0;}
@@ -566,6 +570,59 @@
   .lib-wish-book .reason{font-size:12.5px;color:var(--ink);margin-top:6px;}
   .lib-wish-book .status-badge{flex-shrink:0;}
 
+
+  /* ---------- 수업 예약 ---------- */
+  .lib-section.sec-reserve .sec-tag{background:#8B5E3C;}
+  .rsv-card{padding:20px 22px;}
+  .rsv-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+  .rsv-nav button{background:#fff;border:1.5px solid var(--line);padding:8px 14px;border-radius:999px;font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;}
+  .rsv-nav button:disabled{opacity:.35;cursor:default;}
+  .rsv-title{font-weight:800;font-size:15px;text-align:center;flex:1;min-width:0;}
+  .rsv-title small{display:block;font-size:11.5px;font-weight:600;color:var(--muted);margin-top:2px;}
+  .rsv-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;}
+  .rsv-tools button{background:none;border:none;color:var(--sky);font-size:12.5px;font-weight:700;text-decoration:underline;padding:0;}
+  .rsv-jump{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--muted);}
+  .rsv-jump input{padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;font-size:12.5px;}
+  .rsv-table-wrap{overflow-x:auto;}
+  .rsv-table{width:100%;border-collapse:collapse;table-layout:fixed;min-width:300px;}
+  .rsv-table th,.rsv-table td{border:1px solid #D8D3C8;text-align:center;}
+  .rsv-corner{width:52px;background:#F1EEE6;font-size:12px;padding:8px 2px;}
+  .rsv-dayhead{background:#F1EEE6;font-size:12.5px;font-weight:800;padding:8px 2px;line-height:1.3;}
+  .rsv-dayhead small{display:block;font-size:11px;font-weight:700;color:var(--muted);}
+  .rsv-dayhead.today{background:var(--sun);color:#fff;}
+  .rsv-dayhead.today small{color:#fff;}
+  .rsv-periodhead{background:#F1EEE6;font-size:12px;font-weight:800;padding:4px 2px;}
+  .rsv-periodhead small{display:block;font-weight:600;font-size:10px;color:var(--muted);}
+  .rsv-dayhead.clickable,.rsv-periodhead.clickable{cursor:pointer;}
+  .rsv-dayhead.clickable:hover,.rsv-periodhead.clickable:hover{background:#E6E0D1;}
+  .rsv-lunch td{background:#EDEAE2;color:var(--muted);font-size:11.5px;padding:4px;letter-spacing:.4em;}
+  .rsv-cell{height:50px;font-size:11.5px;padding:2px;overflow:hidden;}
+  .rsv-cell.open{background:#fff;color:#C9C3B6;cursor:pointer;font-size:17px;}
+  .rsv-cell.open:hover{background:var(--leaf-light);color:var(--leaf);}
+  .rsv-cell.blocked{background:repeating-linear-gradient(135deg,#E4E2DC,#E4E2DC 6px,#D2CFC7 6px,#D2CFC7 12px);color:#8E897E;cursor:not-allowed;font-size:11px;font-weight:700;}
+  .rsv-cell.taken{background:#CFCCC4;color:#3E3A33;cursor:default;}
+  .rsv-name{font-weight:700;font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .rsv-sub{font-size:10px;margin-top:2px;line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all;}
+  .rsv-cell.admin.blocked{cursor:pointer;}
+  .rsv-cell.admin.taken{cursor:pointer;background:#F4E3C8;}
+  .rsv-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--muted);}
+  .rsv-legend i{display:inline-block;width:14px;height:14px;border:1px solid #BDB8AC;border-radius:3px;vertical-align:-2px;margin-right:5px;}
+  .rsv-when{background:#F1EEE6;border-radius:10px;padding:11px 14px;font-weight:800;font-size:14.5px;margin:14px 0;}
+  .rsv-select{padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:13px;font-weight:700;background:#fff;}
+  .arsv-list-title{font-size:15px;margin:28px 0 4px;}
+  .arsv-item{background:#fff;border:1px solid var(--line);border-left:5px solid #8B5E3C;border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .arsv-item .when{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--muted);}
+  .arsv-item .who{font-weight:800;font-size:14px;margin-top:3px;}
+  .arsv-item .what{font-size:13px;margin-top:3px;word-break:break-word;}
+  .arsv-item .new-tag{display:inline-block;background:var(--danger);color:#fff;font-size:10px;font-weight:800;padding:1px 6px;border-radius:999px;margin-left:6px;vertical-align:1px;}
+  .arsv-item .arsv-del{background:var(--danger);color:#fff;border:none;padding:7px 12px;border-radius:8px;font-size:12px;font-weight:700;flex-shrink:0;}
+  @media (max-width:680px){
+    .rsv-card{padding:14px 10px;}
+    .rsv-corner,.rsv-periodhead{width:44px;}
+    .rsv-dayhead{font-size:11.5px;}
+    .rsv-nav button{padding:7px 10px;font-size:12px;}
+  }
+
   footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13px;}
 
   @media (max-width:680px){
@@ -606,6 +663,7 @@
     <button data-target="news" class="active">도서관 소식</button>
     <button data-target="faq">자주 묻는 질문</button>
     <button data-target="wishlist">희망도서 신청</button>
+    <button data-target="reserve">수업 예약</button>
     <button data-target="ask">나만의 도서관</button>
     <button data-target="librarian">사서 선생님</button>
   </div>
@@ -678,6 +736,10 @@
               <input type="text" id="w-search-input" placeholder="책 제목을 입력하면 검색됩니다">
               <button type="button" id="w-search-btn">검색</button>
             </div>
+            <div class="search-options">
+              <select id="w-search-sort" aria-label="정렬"><option value="DEFAULT">인기도순</option><option value="RELATION">정확도순</option></select>
+              <select id="w-search-category" aria-label="분류"><option value="BOOK">국내도서</option><option value="FOREIGN">외국도서</option></select>
+            </div>
             <div class="aladin-results" id="aladin-results"></div>
           </div>
         </div>
@@ -706,6 +768,31 @@
       <p class="form-msg" id="wish-msg"></p>
     </div>
 
+  </div>
+</section>
+
+<section id="reserve">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="tag">Class Reservation</span>
+      <h2>도서관 수업 이용 예약</h2>
+      <p>수업이나 행사로 도서관을 쓰고 싶은 시간 칸을 눌러 신청해주세요. 오늘을 기준으로 앞뒤 3주까지 볼 수 있어요.</p>
+    </div>
+    <div class="card rsv-card">
+      <div class="rsv-nav">
+        <button type="button" id="rsv-prev">‹ 이전 주</button>
+        <div class="rsv-title" id="rsv-title"></div>
+        <button type="button" id="rsv-next">다음 주 ›</button>
+      </div>
+      <div class="rsv-tools"><button type="button" id="rsv-today">이번 주로 돌아가기</button></div>
+      <div class="rsv-table-wrap" id="rsv-table"></div>
+      <div class="rsv-legend">
+        <span><i style="background:#fff"></i>신청 가능 (눌러서 신청)</span>
+        <span><i style="background:#CFCCC4"></i>이미 신청됨 (신청자 이름 표시)</span>
+        <span><i style="background:repeating-linear-gradient(135deg,#E4E2DC,#E4E2DC 4px,#D2CFC7 4px,#D2CFC7 8px)"></i>이용 불가</span>
+      </div>
+      <p class="form-msg" id="rsv-notice" style="text-align:center;"></p>
+    </div>
   </div>
 </section>
 
@@ -900,6 +987,40 @@
           <div class="catalog-pagination" id="lib-wish-pagination" style="margin-top:16px;"></div>
         </div>
 
+        <div class="lib-section sec-reserve">
+          <span class="sec-tag">📅 수업 예약 관리</span>
+          <p class="desc">시간표 칸을 누르면 그 시간을 <b>닫거나 다시 열 수 있어요</b> (닫힌 칸은 이용자가 신청할 수 없어요). 요일(날짜)이나 교시 이름을 누르면 한꺼번에 처리돼요. 신청된 칸을 누르면 내용을 보고 삭제할 수 있어요.</p>
+          <div class="rsv-nav">
+            <button type="button" id="arsv-prev">‹ 이전 주</button>
+            <div class="rsv-title" id="arsv-title"></div>
+            <button type="button" id="arsv-next">다음 주 ›</button>
+          </div>
+          <div class="rsv-tools">
+            <button type="button" id="arsv-today">이번 주로</button>
+            <label class="rsv-jump">날짜로 이동 <input type="date" id="arsv-jump"></label>
+          </div>
+          <div class="rsv-table-wrap" id="arsv-table"></div>
+          <div class="rsv-legend">
+            <span><i style="background:#fff"></i>열림 (누르면 닫기)</span>
+            <span><i style="background:repeating-linear-gradient(135deg,#E4E2DC,#E4E2DC 4px,#D2CFC7 4px,#D2CFC7 8px)"></i>닫힘 (누르면 열기)</span>
+            <span><i style="background:#F4E3C8"></i>신청됨 (누르면 내용 확인·삭제)</span>
+          </div>
+
+          <h4 class="arsv-list-title">📋 신청 내역 보기</h4>
+          <div class="lib-toolbar">
+            <select id="arsv-range" class="rsv-select">
+              <option value="future">오늘부터 (앞으로 예약)</option>
+              <option value="1m">1개월 전부터</option>
+              <option value="3m">3개월 전부터</option>
+              <option value="6m">6개월 전부터</option>
+              <option value="12m">1년 전부터</option>
+            </select>
+            <input type="text" id="arsv-search" placeholder="이름·학년반·수업명으로 검색">
+          </div>
+          <div class="lib-list" id="arsv-list"></div>
+          <div class="catalog-pagination" id="arsv-pagination" style="margin-top:16px;"></div>
+        </div>
+
         <div class="lib-section sec-question">
           <span class="sec-tag">💬 질문 관리</span>
           <div class="lib-toolbar">
@@ -931,6 +1052,20 @@
     <div class="news-gallery" id="news-modal-gallery"></div>
     <div class="content" id="news-modal-content"></div>
     <div class="news-attachment-list" id="news-modal-attachment"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="rsv-modal">
+  <div class="modal-box" style="max-width:460px;padding:28px 26px 30px;">
+    <button class="modal-close" id="rsv-modal-close" aria-label="닫기">✕</button>
+    <h2 style="font-size:22px;margin-top:0;">도서관 이용 신청</h2>
+    <div class="rsv-when" id="rsv-modal-when"></div>
+    <div class="field" style="margin-bottom:12px;"><label for="rsv-name"><span class="ico">👤</span>신청자 이름<span class="req">*</span></label><input type="text" id="rsv-name" placeholder="예: 홍길동" maxlength="20"></div>
+    <div class="field" style="margin-bottom:12px;"><label for="rsv-group"><span class="ico">🏫</span>학년·반 / 교과 (선택)</label><input type="text" id="rsv-group" placeholder="예: 2학년 3반 국어" maxlength="30"></div>
+    <div class="field" style="margin-bottom:6px;"><label for="rsv-content"><span class="ico">📝</span>수업(행사)명<span class="req">*</span></label><input type="text" id="rsv-content" placeholder="예: 독서 토론 수업" maxlength="60"></div>
+    <p class="form-note" style="font-size:12px;color:var(--muted);margin-top:4px;">수업(행사)명은 사서 선생님만 볼 수 있어요. 다른 분들에게는 신청자 이름만 보여요.</p>
+    <button class="primary-btn" id="rsv-submit-btn" style="display:block;width:100%;margin-top:16px;">신청하기</button>
+    <p class="form-msg" id="rsv-msg"></p>
   </div>
 </div>
 
@@ -1772,8 +1907,12 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   /* ---------------- 예스24 Open API (via Vercel proxy) ---------------- */
   const YES24_PROXY_URL = 'https://aladin-proxy-eta.vercel.app/api/search-yes24';
 
-  async function searchYes24ViaProxy(query){
-    const res = await fetch(YES24_PROXY_URL + '?q=' + encodeURIComponent(query));
+  async function searchYes24ViaProxy(query, page, sort, category){
+    const url = YES24_PROXY_URL + '?q=' + encodeURIComponent(query)
+      + '&page=' + (page || 1)
+      + '&sort=' + encodeURIComponent(sort || 'DEFAULT')
+      + '&category=' + encodeURIComponent(category || 'BOOK');
+    const res = await fetch(url);
     if(!res.ok) throw new Error('HTTP ' + res.status);
     return await res.json();
   }
@@ -1791,7 +1930,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     const yearMatch = String(d.publishDate || '').match(/\d{4}/);
     return {
       title: String(d.title || '').trim(),
-      author: String(d.author || '').trim(),
+      author: String(d.author || '').replace(/\s+저(?=\s*(?:\/|$))/g, '').trim(),
       publisher: String(d.publisher || '').trim(),
       pubYear: yearMatch ? yearMatch[0] : '',
       price: priceNum > 0 ? String(Math.round(priceNum)) : '',
@@ -1801,17 +1940,21 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     };
   }
 
-  async function fetchBookResults(q){
+  async function fetchBookResults(q, page, sort, category){
     try{
-      const data = await searchYes24ViaProxy(q);
+      const data = await searchYes24ViaProxy(q, page, sort, category);
       const items = extractYes24Items(data).map(normalizeYes24Item).filter(function(it){ return it.title; });
-      if(items.length > 0) return {source:'yes24', items:items};
+      if(items.length > 0){
+        const total = Number(data && data.data && data.data.totalCount) || items.length;
+        return {source:'yes24', items:items, totalCount:total};
+      }
     }catch(e){ /* 예스24가 안 되면 국립중앙도서관으로 대신 검색 */ }
+    if(page > 1) return {source:'yes24', items:[], totalCount:0};
     const data = await searchBooksViaProxy(q);
     if(data.error) throw new Error(data.error);
     const items = ((data && data.docs) || []).map(normalizeNlDoc).filter(function(it){ return it.title; });
     items.sort(function(a, b){ return (a.isEbook ? 1 : 0) - (b.isEbook ? 1 : 0); });
-    return {source:'nl', items:items};
+    return {source:'nl', items:items, totalCount:items.length};
   }
 
   function normalizeTitleForMatch(s){
@@ -1829,54 +1972,99 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   }
 
   const aladinResultsBox = document.getElementById('aladin-results');
-  document.getElementById('w-search-btn').addEventListener('click', async function(){
+  let bookSearchState = {q:'', page:1, sort:'DEFAULT', category:'BOOK', source:'yes24', items:[], totalCount:0};
+
+  function renderBookResults(){
+    const st = bookSearchState;
+    const items = st.items;
+    const canMore = st.source === 'yes24' && items.length < st.totalCount;
+    aladinResultsBox.innerHTML = items.map(function(it, idx){
+      return '<div class="aladin-result-item" data-idx="'+idx+'">'+
+        (it.cover ? '<img src="'+escapeAttr(it.cover)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">' : '')+
+        '<div class="info"><div class="t">'+escapeHtml(it.title)+(it.isEbook?' <span style="font-size:11px;color:var(--danger);font-weight:700;">[전자책]</span>':'')+'</div>'+
+        '<div class="a">'+escapeHtml(it.author)+(it.publisher?' · '+escapeHtml(it.publisher):'')+(it.pubYear?' · '+escapeHtml(it.pubYear):'')+(it.price?' · '+escapeHtml(it.price)+'원':'')+'</div>'+
+        (it.link ? '<a class="y24-link" href="'+escapeAttr(it.link)+'" target="_blank" rel="noopener">예스24에서 보기 ↗</a>' : '')+
+        '</div>'+
+        '<button type="button" class="pick-btn">선택</button>'+
+      '</div>';
+    }).join('') +
+    (canMore ? '<button type="button" class="more-results-btn" id="w-more-btn">더 보기 ('+items.length+' / '+st.totalCount+')</button>' : '') +
+    '<div class="book-source-note">'+(st.source === 'yes24'
+      ? '도서 정보 출처: <a href="https://www.yes24.com" target="_blank" rel="noopener">예스24</a>'
+      : '도서 정보 출처: 국립중앙도서관')+'</div>';
+
+    aladinResultsBox.querySelectorAll('.aladin-result-item').forEach(function(el){
+      const idx = Number(el.dataset.idx);
+      el.querySelector('.pick-btn').addEventListener('click', function(){
+        const it = bookSearchState.items[idx];
+        document.getElementById('w-title').value = it.title;
+        document.getElementById('w-author').value = it.author;
+        document.getElementById('w-publisher').value = it.publisher;
+        document.getElementById('w-pubyear').value = it.pubYear;
+        document.getElementById('w-price').value = it.price;
+        aladinResultsBox.innerHTML = '';
+        document.getElementById('w-search-input').value = '';
+
+        const match = findCatalogMatch(it.title);
+        if(match){
+          alert('📚 이미 학교도서관에 있는 책이에요!\n\n"'+match.t+'"'+(match.c?'\n청구기호: '+match.c:'')+'\n\n그래도 신청하시려면 아래 "➕ 목록에 추가"를 눌러 계속 진행해주세요.');
+        }
+      });
+    });
+    const moreBtn = document.getElementById('w-more-btn');
+    if(moreBtn){
+      moreBtn.addEventListener('click', function(){ loadMoreBookResults(moreBtn); });
+    }
+  }
+
+  async function loadMoreBookResults(btn){
+    btn.disabled = true;
+    btn.textContent = '불러오는 중...';
+    const st = bookSearchState;
+    try{
+      const next = st.page + 1;
+      const result = await fetchBookResults(st.q, next, st.sort, st.category);
+      if(result.items.length === 0){
+        st.totalCount = st.items.length;
+      }else{
+        st.items = st.items.concat(result.items);
+        st.page = next;
+      }
+    }catch(e){ /* 실패하면 지금까지 불러온 목록만 그대로 보여줘요 */ }
+    renderBookResults();
+  }
+
+  async function runBookSearch(){
     const q = document.getElementById('w-search-input').value.trim();
     if(!q){ return; }
-    this.disabled = true;
+    const btn = document.getElementById('w-search-btn');
+    btn.disabled = true;
     aladinResultsBox.innerHTML = '<div class="empty-state">검색 중...</div>';
     try{
-      const result = await fetchBookResults(q);
-      const items = result.items;
-      if(items.length === 0){
+      const sort = document.getElementById('w-search-sort').value;
+      const category = document.getElementById('w-search-category').value;
+      const result = await fetchBookResults(q, 1, sort, category);
+      bookSearchState = {q:q, page:1, sort:sort, category:category, source:result.source, items:result.items, totalCount:result.totalCount};
+      if(result.items.length === 0){
         aladinResultsBox.innerHTML = '<div class="empty-state">검색 결과가 없어요. 직접 입력해주세요.</div>';
         return;
       }
-      aladinResultsBox.innerHTML = items.map(function(it, idx){
-        return '<div class="aladin-result-item" data-idx="'+idx+'">'+
-          (it.cover ? '<img src="'+escapeAttr(it.cover)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">' : '')+
-          '<div class="info"><div class="t">'+escapeHtml(it.title)+(it.isEbook?' <span style="font-size:11px;color:var(--danger);font-weight:700;">[전자책]</span>':'')+'</div>'+
-          '<div class="a">'+escapeHtml(it.author)+(it.publisher?' · '+escapeHtml(it.publisher):'')+(it.pubYear?' · '+escapeHtml(it.pubYear):'')+(it.price?' · '+escapeHtml(it.price)+'원':'')+'</div>'+
-          (it.link ? '<a class="y24-link" href="'+escapeAttr(it.link)+'" target="_blank" rel="noopener">예스24에서 보기 ↗</a>' : '')+
-          '</div>'+
-          '<button type="button" class="pick-btn">선택</button>'+
-        '</div>';
-      }).join('') +
-      '<div class="book-source-note">'+(result.source === 'yes24'
-        ? '도서 정보 출처: <a href="https://www.yes24.com" target="_blank" rel="noopener">예스24</a>'
-        : '도서 정보 출처: 국립중앙도서관')+'</div>';
-      aladinResultsBox.querySelectorAll('.aladin-result-item').forEach(function(el){
-        const idx = Number(el.dataset.idx);
-        el.querySelector('.pick-btn').addEventListener('click', function(){
-          const it = items[idx];
-          document.getElementById('w-title').value = it.title;
-          document.getElementById('w-author').value = it.author;
-          document.getElementById('w-publisher').value = it.publisher;
-          document.getElementById('w-pubyear').value = it.pubYear;
-          document.getElementById('w-price').value = it.price;
-          aladinResultsBox.innerHTML = '';
-          document.getElementById('w-search-input').value = '';
-
-          const match = findCatalogMatch(it.title);
-          if(match){
-            alert('📚 이미 학교도서관에 있는 책이에요!\n\n"'+match.t+'"'+(match.c?'\n청구기호: '+match.c:'')+'\n\n그래도 신청하시려면 아래 "➕ 목록에 추가"를 눌러 계속 진행해주세요.');
-          }
-        });
-      });
+      renderBookResults();
     }catch(e){
       aladinResultsBox.innerHTML = '<div class="empty-state">검색에 실패했어요. 직접 입력해주세요.<br><span style="font-size:11px;color:var(--muted);">(오류 정보: '+escapeHtml(e && e.message ? e.message : String(e))+')</span></div>';
     }finally{
-      this.disabled = false;
+      btn.disabled = false;
     }
+  }
+
+  document.getElementById('w-search-btn').addEventListener('click', runBookSearch);
+  document.getElementById('w-search-input').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); runBookSearch(); }
+  });
+  ['w-search-sort', 'w-search-category'].forEach(function(id){
+    document.getElementById(id).addEventListener('change', function(){
+      if(document.getElementById('w-search-input').value.trim()) runBookSearch();
+    });
   });
 
   let wishCart = [];
@@ -2251,6 +2439,431 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     }
   });
 
+  /* ---------------- CLASS RESERVATION (도서관 수업 이용 예약) ---------------- */
+  const RSV_PERIODS = [
+    {n:1, t:'09:00'}, {n:2, t:'09:55'}, {n:3, t:'10:50'}, {n:4, t:'11:45'},
+    {lunch:true, label:'점심시간'},
+    {n:5, t:'13:30'}, {n:6, t:'14:25'}, {n:7, t:'15:20'}, {n:8, t:'16:15'}
+  ];
+  const RSV_WEEKDAYS = ['일','월','화','수','목','금','토'];
+  const RSV_PUB = 'rsvpub_';   // 누구나 볼 수 있는 정보(날짜·교시·신청자 이름)
+  const RSV_DET = 'rsvdet_';   // 사서만 보는 상세 정보(학년반·수업명)
+  const RSV_BLK = 'rsvblk_';   // 이용 불가로 닫아둔 칸
+  const RSV_USER_WEEKS = 3;
+  const RSV_ADMIN_WEEKS = 52;
+
+  function rsvISO(d){
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function rsvParse(iso){ return new Date(iso+'T00:00:00'); }
+  function rsvMonday(d){
+    const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    x.setDate(x.getDate() - ((x.getDay()+6) % 7));
+    return x;
+  }
+  function rsvAddDays(d, n){
+    const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    x.setDate(x.getDate() + n);
+    return x;
+  }
+  function rsvDayText(d){ return (d.getMonth()+1)+'.'+d.getDate()+'('+RSV_WEEKDAYS[d.getDay()]+')'; }
+  function rsvPeriodInfo(n){ return RSV_PERIODS.find(function(p){ return p.n === n; }); }
+  const rsvThisMonday = rsvMonday(new Date());
+  function rsvWeekOffset(ws){ return Math.round((ws.getTime() - rsvThisMonday.getTime()) / (7*24*3600*1000)); }
+  function rsvWeekTitle(ws){
+    const off = rsvWeekOffset(ws);
+    const label = off === 0 ? '이번 주' : (off < 0 ? (-off)+'주 전' : off+'주 후');
+    return rsvDayText(ws).replace(/\(.\)/,'')+' ~ '+rsvDayText(rsvAddDays(ws,4)).replace(/\(.\)/,'')+'<small>'+label+'</small>';
+  }
+
+  function rsvRange(prefix, startISO, endISO){
+    return __db.collection('library')
+      .where(firebase.firestore.FieldPath.documentId(), '>=', prefix + startISO)
+      .where(firebase.firestore.FieldPath.documentId(), '<', prefix + endISO);
+  }
+
+  async function fetchRsvWeek(ws, withDetails){
+    const startISO = rsvISO(ws), endISO = rsvISO(rsvAddDays(ws, 7));
+    const jobs = [rsvRange(RSV_PUB, startISO, endISO).get(), rsvRange(RSV_BLK, startISO, endISO).get()];
+    if(withDetails) jobs.push(rsvRange(RSV_DET, startISO, endISO).get());
+    const snaps = await Promise.all(jobs);
+    const out = {pub:{}, blk:{}, det:{}};
+    snaps[0].forEach(function(doc){ const d = doc.data(); out.pub[d.date+'_'+d.period] = d; });
+    snaps[1].forEach(function(doc){ const d = doc.data(); out.blk[d.date+'_'+d.period] = d; });
+    if(withDetails) snaps[2].forEach(function(doc){ const d = doc.data(); out.det[d.date+'_'+d.period] = d; });
+    return out;
+  }
+
+  function buildRsvTable(ws, data, mode){
+    const admin = (mode === 'admin');
+    const todayISO = rsvISO(new Date());
+    let h = '<table class="rsv-table"><thead><tr><th class="rsv-corner">교시</th>';
+    for(let i=0; i<5; i++){
+      const d = rsvAddDays(ws, i), iso = rsvISO(d);
+      h += '<th class="rsv-dayhead'+(iso===todayISO?' today':'')+(admin?' clickable':'')+'" data-date="'+iso+'">'+(d.getMonth()+1)+'.'+d.getDate()+'<small>('+RSV_WEEKDAYS[d.getDay()]+')</small></th>';
+    }
+    h += '</tr></thead><tbody>';
+    RSV_PERIODS.forEach(function(p){
+      if(p.lunch){ h += '<tr class="rsv-lunch"><td colspan="6">'+p.label+'</td></tr>'; return; }
+      h += '<tr><th class="rsv-periodhead'+(admin?' clickable':'')+'" data-period="'+p.n+'">'+p.n+'교시<small>'+p.t+'</small></th>';
+      for(let i=0; i<5; i++){
+        const iso = rsvISO(rsvAddDays(ws, i)), key = iso+'_'+p.n;
+        const attrs = ' data-date="'+iso+'" data-period="'+p.n+'" data-key="'+key+'"';
+        if(data.pub[key]){
+          if(admin){
+            const det = data.det[key] || {};
+            h += '<td class="rsv-cell taken admin"'+attrs+'><div class="rsv-name">'+escapeHtml(data.pub[key].name)+'</div><div class="rsv-sub">'+escapeHtml(det.content||'')+'</div></td>';
+          }else{
+            h += '<td class="rsv-cell taken"'+attrs+'><div class="rsv-name">'+escapeHtml(data.pub[key].name)+'</div></td>';
+          }
+        }else if(data.blk[key]){
+          h += '<td class="rsv-cell blocked'+(admin?' admin':'')+'"'+attrs+'>'+(admin?'닫힘':'')+'</td>';
+        }else{
+          h += '<td class="rsv-cell open'+(admin?' admin':'')+'"'+attrs+'>'+(admin?'':'＋')+'</td>';
+        }
+      }
+      h += '</tr>';
+    });
+    return h + '</tbody></table>';
+  }
+
+  /* ----- 이용자 화면 ----- */
+  let rsvWeekStart = rsvMonday(new Date());
+  let rsvLoadToken = 0;
+  let rsvPending = null;
+
+  async function renderRsvUser(){
+    const box = document.getElementById('rsv-table');
+    if(!box) return;
+    const ws = rsvWeekStart;
+    const off = rsvWeekOffset(ws);
+    document.getElementById('rsv-title').innerHTML = rsvWeekTitle(ws);
+    document.getElementById('rsv-prev').disabled = off <= -RSV_USER_WEEKS;
+    document.getElementById('rsv-next').disabled = off >= RSV_USER_WEEKS;
+    const token = ++rsvLoadToken;
+    box.innerHTML = '<div class="empty-state">시간표를 불러오는 중...</div>';
+    try{
+      const data = await fetchRsvWeek(ws, false);
+      if(token !== rsvLoadToken) return;
+      box.innerHTML = buildRsvTable(ws, data, 'user');
+      box.querySelectorAll('.rsv-cell.open').forEach(function(td){
+        td.addEventListener('click', function(){ openRsvModal(td.dataset.date, Number(td.dataset.period)); });
+      });
+    }catch(e){
+      if(token !== rsvLoadToken) return;
+      box.innerHTML = '<div class="empty-state">시간표를 불러오지 못했어요. 잠시 후 다시 시도해주세요.</div>';
+    }
+  }
+
+  document.getElementById('rsv-prev').addEventListener('click', function(){
+    if(rsvWeekOffset(rsvWeekStart) <= -RSV_USER_WEEKS) return;
+    rsvWeekStart = rsvAddDays(rsvWeekStart, -7); renderRsvUser();
+  });
+  document.getElementById('rsv-next').addEventListener('click', function(){
+    if(rsvWeekOffset(rsvWeekStart) >= RSV_USER_WEEKS) return;
+    rsvWeekStart = rsvAddDays(rsvWeekStart, 7); renderRsvUser();
+  });
+  document.getElementById('rsv-today').addEventListener('click', function(){
+    rsvWeekStart = rsvMonday(new Date()); renderRsvUser();
+  });
+
+  const rsvModal = document.getElementById('rsv-modal');
+  function openRsvModal(dateISO, period){
+    rsvPending = {date: dateISO, period: period};
+    document.getElementById('rsv-modal-when').textContent = rsvDayText(rsvParse(dateISO))+' · '+period+'교시 ('+rsvPeriodInfo(period).t+')';
+    document.getElementById('rsv-group').value = '';
+    document.getElementById('rsv-content').value = '';
+    const msg = document.getElementById('rsv-msg');
+    msg.textContent = ''; msg.className = 'form-msg';
+    rsvModal.classList.add('show');
+    document.getElementById('rsv-name').focus();
+  }
+  function closeRsvModal(){ rsvModal.classList.remove('show'); }
+  document.getElementById('rsv-modal-close').addEventListener('click', closeRsvModal);
+  rsvModal.addEventListener('click', function(e){ if(e.target === rsvModal) closeRsvModal(); });
+
+  async function createReservation(dateISO, period, info){
+    const id = dateISO+'_'+period;
+    const pubRef = __db.collection('library').doc(RSV_PUB+id);
+    const detRef = __db.collection('library').doc(RSV_DET+id);
+    const blkRef = __db.collection('library').doc(RSV_BLK+id);
+    const nowIso = new Date().toISOString();
+    return await __db.runTransaction(async function(tx){
+      const pubSnap = await tx.get(pubRef);
+      const blkSnap = await tx.get(blkRef);
+      if(pubSnap.exists) return {ok:false, reason:'taken'};
+      if(blkSnap.exists) return {ok:false, reason:'blocked'};
+      tx.set(pubRef, {date:dateISO, period:period, name:info.name, createdAt:nowIso});
+      tx.set(detRef, {date:dateISO, period:period, name:info.name, group:info.group, content:info.content, createdAt:nowIso});
+      return {ok:true};
+    });
+  }
+
+  document.getElementById('rsv-submit-btn').addEventListener('click', async function(){
+    if(!rsvPending) return;
+    const name = document.getElementById('rsv-name').value.trim();
+    const group = document.getElementById('rsv-group').value.trim();
+    const content = document.getElementById('rsv-content').value.trim();
+    const msg = document.getElementById('rsv-msg');
+    if(!name || !content){
+      msg.textContent = '신청자 이름과 수업(행사)명은 꼭 입력해주세요.';
+      msg.className = 'form-msg err';
+      return;
+    }
+    const btn = this;
+    btn.disabled = true;
+    try{
+      const target = rsvPending;
+      const res = await createReservation(target.date, target.period, {name:name, group:group, content:content});
+      if(!res.ok){
+        msg.textContent = res.reason === 'taken'
+          ? '방금 다른 분이 먼저 신청한 시간이에요. 다른 시간을 골라주세요.'
+          : '이 시간은 지금 신청할 수 없게 닫혀 있어요.';
+        msg.className = 'form-msg err';
+        renderRsvUser();
+        return;
+      }
+      closeRsvModal();
+      const notice = document.getElementById('rsv-notice');
+      notice.textContent = rsvDayText(rsvParse(target.date))+' '+target.period+'교시 신청이 접수됐어요!';
+      notice.className = 'form-msg ok';
+      setTimeout(function(){ notice.textContent = ''; notice.className = 'form-msg'; }, 6000);
+      sendNotificationEmail(
+        name + (group ? ' ('+group+')' : ''),
+        '도서관 수업 예약',
+        rsvDayText(rsvParse(target.date))+' '+target.period+'교시 · '+content
+      );
+      renderRsvUser();
+    }catch(e){
+      msg.textContent = '신청에 실패했어요. 다시 시도해주세요.';
+      msg.className = 'form-msg err';
+    }finally{
+      btn.disabled = false;
+    }
+  });
+
+  /* ----- 사서 화면 ----- */
+  let arsvWeekStart = rsvMonday(new Date());
+  let arsvData = {pub:{}, blk:{}, det:{}};
+  let arsvLoadToken = 0;
+  let arsvListItems = [];
+  let arsvListPage = 1;
+  const ARSV_PAGE_SIZE = 10;
+
+  function arsvClampWeek(ws){
+    const min = rsvAddDays(rsvThisMonday, -7*RSV_ADMIN_WEEKS);
+    const max = rsvAddDays(rsvThisMonday, 7*RSV_ADMIN_WEEKS);
+    if(ws < min) return min;
+    if(ws > max) return max;
+    return ws;
+  }
+
+  async function renderAdminRsvWeek(){
+    const box = document.getElementById('arsv-table');
+    if(!box) return;
+    const ws = arsvWeekStart;
+    const off = rsvWeekOffset(ws);
+    document.getElementById('arsv-title').innerHTML = rsvWeekTitle(ws);
+    document.getElementById('arsv-prev').disabled = off <= -RSV_ADMIN_WEEKS;
+    document.getElementById('arsv-next').disabled = off >= RSV_ADMIN_WEEKS;
+    const token = ++arsvLoadToken;
+    box.innerHTML = '<div class="empty-state">불러오는 중...</div>';
+    try{
+      const data = await fetchRsvWeek(ws, true);
+      if(token !== arsvLoadToken) return;
+      arsvData = data;
+      box.innerHTML = buildRsvTable(ws, data, 'admin');
+      box.querySelectorAll('.rsv-cell.open').forEach(function(td){
+        td.addEventListener('click', function(){ arsvSetBlocks([{date:td.dataset.date, period:Number(td.dataset.period)}], true); });
+      });
+      box.querySelectorAll('.rsv-cell.blocked').forEach(function(td){
+        td.addEventListener('click', function(){ arsvSetBlocks([{date:td.dataset.date, period:Number(td.dataset.period)}], false); });
+      });
+      box.querySelectorAll('.rsv-cell.taken').forEach(function(td){
+        td.addEventListener('click', function(){ arsvShowDetail(td.dataset.key); });
+      });
+      box.querySelectorAll('.rsv-dayhead.clickable').forEach(function(th){
+        th.addEventListener('click', function(){
+          const slots = RSV_PERIODS.filter(function(p){ return !p.lunch; }).map(function(p){ return {date:th.dataset.date, period:p.n}; });
+          arsvBulkToggle(slots, rsvDayText(rsvParse(th.dataset.date))+' 하루 전체');
+        });
+      });
+      box.querySelectorAll('.rsv-periodhead.clickable').forEach(function(th){
+        th.addEventListener('click', function(){
+          const n = Number(th.dataset.period);
+          const slots = [0,1,2,3,4].map(function(i){ return {date:rsvISO(rsvAddDays(ws, i)), period:n}; });
+          arsvBulkToggle(slots, '이번 주 '+n+'교시 전체');
+        });
+      });
+    }catch(e){
+      if(token !== arsvLoadToken) return;
+      box.innerHTML = '<div class="empty-state">시간표를 불러오지 못했어요. 다시 시도해주세요.</div>';
+    }
+  }
+
+  async function arsvSetBlocks(slots, close){
+    try{
+      const batch = __db.batch();
+      slots.forEach(function(s){
+        const ref = __db.collection('library').doc(RSV_BLK+s.date+'_'+s.period);
+        if(close) batch.set(ref, {date:s.date, period:s.period, createdAt:new Date().toISOString()});
+        else batch.delete(ref);
+      });
+      await batch.commit();
+    }catch(e){
+      alert('저장에 실패했어요. 다시 시도해주세요.');
+    }
+    renderAdminRsvWeek();
+  }
+
+  function arsvBulkToggle(slots, label){
+    const free = slots.filter(function(s){ return !arsvData.pub[s.date+'_'+s.period]; });
+    if(free.length === 0){ alert('이미 모두 신청되어 있어서 바꿀 수 있는 칸이 없어요.'); return; }
+    const openOnes = free.filter(function(s){ return !arsvData.blk[s.date+'_'+s.period]; });
+    if(openOnes.length > 0){
+      if(!confirm(label+' 중 열려 있는 '+openOnes.length+'칸을 모두 닫을까요?\n(이미 신청된 칸은 그대로 유지돼요)')) return;
+      arsvSetBlocks(openOnes, true);
+    }else{
+      if(!confirm(label+' 중 닫혀 있는 '+free.length+'칸을 모두 다시 열까요?')) return;
+      arsvSetBlocks(free, false);
+    }
+  }
+
+  async function arsvDeleteReservation(dateISO, period){
+    try{
+      const batch = __db.batch();
+      batch.delete(__db.collection('library').doc(RSV_PUB+dateISO+'_'+period));
+      batch.delete(__db.collection('library').doc(RSV_DET+dateISO+'_'+period));
+      await batch.commit();
+      return true;
+    }catch(e){
+      alert('삭제에 실패했어요. 다시 시도해주세요.');
+      return false;
+    }
+  }
+
+  async function arsvShowDetail(key){
+    const pub = arsvData.pub[key];
+    if(!pub) return;
+    const det = arsvData.det[key] || {};
+    const text = rsvDayText(rsvParse(pub.date))+' '+pub.period+'교시 ('+rsvPeriodInfo(pub.period).t+')\n'+
+      '신청자: '+pub.name+(det.group ? ' ('+det.group+')' : '')+'\n'+
+      '수업(행사)명: '+(det.content || '-')+'\n\n'+
+      '이 예약을 삭제할까요? (삭제하면 그 시간이 다시 열려요)';
+    if(!confirm(text)) return;
+    if(await arsvDeleteReservation(pub.date, pub.period)){
+      renderAdminRsvWeek();
+      loadAdminRsvList();
+    }
+  }
+
+  function arsvRangeStartISO(range){
+    const d = new Date();
+    if(range === '1m') d.setMonth(d.getMonth()-1);
+    else if(range === '3m') d.setMonth(d.getMonth()-3);
+    else if(range === '6m') d.setMonth(d.getMonth()-6);
+    else if(range === '12m') d.setFullYear(d.getFullYear()-1);
+    return rsvISO(d);
+  }
+
+  async function loadAdminRsvList(){
+    const listEl = document.getElementById('arsv-list');
+    if(!listEl) return;
+    listEl.innerHTML = '<div class="empty-state">불러오는 중...</div>';
+    try{
+      const range = document.getElementById('arsv-range').value;
+      const snap = await rsvRange(RSV_DET, arsvRangeStartISO(range), '9999-12-31').get();
+      const items = [];
+      snap.forEach(function(doc){ items.push(doc.data()); });
+      items.sort(function(a, b){
+        const ka = a.date+'_'+a.period, kb = b.date+'_'+b.period;
+        return range === 'future' ? (ka < kb ? -1 : 1) : (ka < kb ? 1 : -1);
+      });
+      arsvListItems = items;
+      arsvListPage = 1;
+      renderAdminRsvList();
+    }catch(e){
+      listEl.innerHTML = '<div class="empty-state">신청 내역을 불러오지 못했어요.</div>';
+    }
+  }
+
+  function renderAdminRsvList(){
+    const listEl = document.getElementById('arsv-list');
+    const pager = document.getElementById('arsv-pagination');
+    if(!listEl) return;
+    const q = document.getElementById('arsv-search').value.trim().toLowerCase();
+    const items = arsvListItems.filter(function(it){
+      if(!q) return true;
+      return (it.name||'').toLowerCase().includes(q) || (it.group||'').toLowerCase().includes(q) || (it.content||'').toLowerCase().includes(q);
+    });
+    if(items.length === 0){
+      listEl.innerHTML = '<div class="empty-state">해당하는 신청이 없어요.</div>';
+      pager.innerHTML = '';
+      return;
+    }
+    const totalPages = Math.ceil(items.length / ARSV_PAGE_SIZE);
+    if(arsvListPage > totalPages) arsvListPage = totalPages;
+    if(arsvListPage < 1) arsvListPage = 1;
+    const pageItems = items.slice((arsvListPage-1)*ARSV_PAGE_SIZE, arsvListPage*ARSV_PAGE_SIZE);
+    const weekAgo = Date.now() - 7*24*3600*1000;
+    listEl.innerHTML = pageItems.map(function(it){
+      const isNew = it.createdAt && new Date(it.createdAt).getTime() > weekAgo;
+      return '<div class="arsv-item" data-date="'+escapeAttr(it.date)+'" data-period="'+it.period+'">'+
+        '<div><div class="when">'+rsvDayText(rsvParse(it.date))+' · '+it.period+'교시 ('+(rsvPeriodInfo(it.period)||{t:''}).t+')'+(isNew?'<span class="new-tag">NEW</span>':'')+'</div>'+
+        '<div class="who">'+escapeHtml(it.name)+(it.group ? ' <span style="font-weight:600;color:var(--muted);">('+escapeHtml(it.group)+')</span>' : '')+'</div>'+
+        '<div class="what">'+escapeHtml(it.content||'')+'</div></div>'+
+        '<button type="button" class="arsv-del">삭제</button>'+
+      '</div>';
+    }).join('');
+    listEl.querySelectorAll('.arsv-item').forEach(function(el){
+      el.querySelector('.arsv-del').addEventListener('click', async function(){
+        const date = el.dataset.date, period = Number(el.dataset.period);
+        if(!confirm(rsvDayText(rsvParse(date))+' '+period+'교시 예약을 삭제할까요? (삭제하면 그 시간이 다시 열려요)')) return;
+        if(await arsvDeleteReservation(date, period)){
+          renderAdminRsvWeek();
+          loadAdminRsvList();
+        }
+      });
+    });
+    if(totalPages > 1){
+      pager.innerHTML =
+        '<button type="button" class="arsv-page-btn" data-page="'+(arsvListPage-1)+'" '+(arsvListPage<=1?'disabled':'')+'>‹ 이전</button>'+
+        '<span class="page-indicator">'+arsvListPage+' / '+totalPages+' 페이지 (총 '+items.length+'건)</span>'+
+        '<button type="button" class="arsv-page-btn" data-page="'+(arsvListPage+1)+'" '+(arsvListPage>=totalPages?'disabled':'')+'>다음 ›</button>';
+      pager.querySelectorAll('.arsv-page-btn').forEach(function(b){
+        b.addEventListener('click', function(){
+          if(b.disabled) return;
+          arsvListPage = Number(b.dataset.page);
+          renderAdminRsvList();
+        });
+      });
+    }else{
+      pager.innerHTML = '<span class="page-indicator">총 '+items.length+'건</span>';
+    }
+  }
+
+  document.getElementById('arsv-prev').addEventListener('click', function(){
+    arsvWeekStart = arsvClampWeek(rsvAddDays(arsvWeekStart, -7)); renderAdminRsvWeek();
+  });
+  document.getElementById('arsv-next').addEventListener('click', function(){
+    arsvWeekStart = arsvClampWeek(rsvAddDays(arsvWeekStart, 7)); renderAdminRsvWeek();
+  });
+  document.getElementById('arsv-today').addEventListener('click', function(){
+    arsvWeekStart = rsvMonday(new Date()); renderAdminRsvWeek();
+  });
+  (function(){
+    const jump = document.getElementById('arsv-jump');
+    jump.min = rsvISO(rsvAddDays(rsvThisMonday, -7*RSV_ADMIN_WEEKS));
+    jump.max = rsvISO(rsvAddDays(rsvThisMonday, 7*RSV_ADMIN_WEEKS+6));
+    jump.addEventListener('change', function(){
+      if(!jump.value) return;
+      arsvWeekStart = arsvClampWeek(rsvMonday(rsvParse(jump.value)));
+      renderAdminRsvWeek();
+    });
+  })();
+  document.getElementById('arsv-range').addEventListener('change', loadAdminRsvList);
+  document.getElementById('arsv-search').addEventListener('input', function(){ arsvListPage = 1; renderAdminRsvList(); });
+
   /* ---------------- GATE / CHAT ---------------- */
   const gateCard = document.getElementById('gate-card');
   const chatWrap = document.getElementById('chat-wrap');
@@ -2516,6 +3129,8 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     renderLibList();
     renderCatalogAddedList();
     renderCatalogRemovedList();
+    renderAdminRsvWeek();
+    loadAdminRsvList();
   }
 
   document.querySelectorAll('.filters button[data-libfilter]').forEach(function(btn){
@@ -2613,17 +3228,19 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   document.querySelectorAll('nav.tabs button').forEach(function(btn){
     btn.addEventListener('click', function(){
       activateTab(btn.dataset.target);
+      if(btn.dataset.target === 'reserve') renderRsvUser();
       if(history.replaceState){ history.replaceState(null, '', '#'+btn.dataset.target); }
     });
   });
 
   /* ---------------- INIT ---------------- */
   renderFaq();
-  const validTabIds = ['news','faq','wishlist','ask','librarian'];
+  const validTabIds = ['news','faq','wishlist','reserve','ask','librarian'];
   const initialHash = (window.location.hash || '').replace('#','');
   if(validTabIds.indexOf(initialHash) !== -1){
     activateTab(initialHash);
   }
+  renderRsvUser();
   (async function init(){
     news = await loadNewsCollection();
     wishes = await loadList(WISH_KEY);
