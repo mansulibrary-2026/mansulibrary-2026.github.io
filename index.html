@@ -692,6 +692,11 @@
     .rsv-card .rsv-nav button{flex:1;}
   }
 
+  /* ---------- 선생님 전용 잠금 ---------- */
+  #rsv-gate{margin-bottom:20px;}
+  .pin-sub{font-size:15px;margin:28px 0 4px;}
+  #rsv-lock-btn{margin-left:auto;color:var(--muted) !important;text-decoration:none !important;font-weight:700;}
+
   footer{padding:36px 0 56px;text-align:center;color:var(--muted);font-size:13px;}
 
   @media (max-width:680px){
@@ -731,7 +736,7 @@
   <div class="wrap">
     <button data-target="news" class="active">도서관 소식</button>
     <button data-target="wishlist">희망도서 신청</button>
-    <button data-target="reserve">도서관 이용 예약</button>
+    <button data-target="reserve">도서관 이용 예약 (선생님 전용)</button>
     <button data-target="faq">자주 묻는 질문</button>
     <button data-target="ask">나만의 도서관</button>
     <button data-target="librarian">사서 선생님</button>
@@ -847,7 +852,14 @@
       <h2>도서관 이용 예약</h2>
       <p>수업, 행사, 활동으로 도서관을 이용하고 싶은 교시를 눌러 신청해주세요. 사서선생님이 확인하면 "신청완료"로 변경됩니다. 도서관 이용 예약은 최소 하루전까지 신청 가능합니다. 당일에 신청할 경우 이용이 불가능 할 수 있습니다.</p>
     </div>
-    <div class="card rsv-card">
+    <div class="card" id="rsv-gate" style="display:none;max-width:480px;">
+      <h3>🔒 선생님 전용 메뉴예요</h3>
+      <p class="desc">인증번호를 입력하면 도서관 이용 예약을 볼 수 있어요. 인증번호는 사서 선생님께 문의해주세요.</p>
+      <div class="field" style="margin-top:14px;"><label for="rsv-code"><span class="ico">🔑</span>인증번호</label><input type="password" id="rsv-code" placeholder="인증번호 입력" maxlength="20"></div>
+      <button class="primary-btn" id="rsv-code-btn">확인</button>
+      <p class="form-msg" id="rsv-code-msg"></p>
+    </div>
+    <div class="card rsv-card" id="rsv-main" style="display:none;">
       <div class="rsv-nav">
         <button type="button" id="rsv-prev">‹ 이전 주</button>
         <div class="rsv-title" id="rsv-title"></div>
@@ -856,6 +868,7 @@
       <div class="rsv-tools">
         <label class="rsv-jump">📅 날짜 선택 <input type="date" id="rsv-jump"></label>
         <button type="button" id="rsv-today">이번 주로 돌아가기</button>
+        <button type="button" id="rsv-lock-btn">🔒 이 기기에서 잠그기</button>
       </div>
       <div class="rsv-table-wrap" id="rsv-table"></div>
       <div class="rsv-legend">
@@ -914,7 +927,7 @@
         <div id="my-wishlist-list" style="margin-top:14px;"></div>
       </div>
 
-      <div class="card" style="border-radius:0;border-left:none;border-right:none;border-top:none;">
+      <div class="card" id="my-rsv-card" style="border-radius:0;border-left:none;border-right:none;border-top:none;">
         <h3>📅 도서관 이용 예약 내역</h3>
         <p style="font-size:12.5px;color:var(--muted);margin-top:6px;">도서관 이용 예약 탭에서 신청한 내용이에요. 앞으로의 예약은 여기서 수정하거나 취소할 수 있어요.</p>
         <div id="my-rsv-list" style="margin-top:14px;"></div>
@@ -977,13 +990,22 @@
         </div>
 
         <div class="lib-section sec-pin" data-sub="pin">
-          <span class="sec-tag">🔑 학생 비밀번호 초기화</span>
+          <span class="sec-tag">🔑 비밀번호 · 인증번호 관리</span>
           <p class="desc">학생이 질문방 비밀번호를 잊어버렸을 때, 학번을 입력하면 초기화돼요.</p>
           <div class="field-row" style="align-items:flex-end;">
             <div class="field" style="max-width:160px;"><label for="lib-reset-id"><span class="ico">🔢</span>학번</label><input type="text" id="lib-reset-id" inputmode="numeric" placeholder="예: 30115" maxlength="10"></div>
             <button class="primary-btn" id="lib-reset-btn" style="margin-top:0;">초기화</button>
           </div>
           <p class="lib-setup-note" id="lib-reset-msg"></p>
+
+          <h4 class="pin-sub">🔐 선생님 전용 메뉴 인증번호</h4>
+          <p class="desc">"도서관 이용 예약" 메뉴는 이 인증번호를 아는 선생님만 열 수 있어요. 선생님들께 알려주세요. 번호를 바꾸면 모든 선생님이 새 번호를 다시 입력해야 해요. (저장된 번호는 다시 볼 수 없어서, 잊어버리면 새로 설정하시면 돼요.)</p>
+          <p class="lib-setup-note" id="lib-tcode-status"></p>
+          <div class="field-row" style="align-items:flex-end;">
+            <div class="field" style="max-width:240px;"><label for="lib-tcode">새 인증번호 (4자 이상)</label><input type="text" id="lib-tcode" placeholder="숫자나 글자 4자 이상" maxlength="20"></div>
+            <button class="primary-btn" id="lib-tcode-btn" style="margin-top:0;">저장</button>
+          </div>
+          <p class="lib-setup-note" id="lib-tcode-msg"></p>
         </div>
 
         <div class="lib-section sec-catalog" data-sub="catalog">
@@ -2734,6 +2756,79 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     rsvWireTitlePicker('rsv-title', 'rsv-jump');
   })();
 
+  /* ----- 선생님 전용 잠금 ----- */
+  const TEACHER_CODE_KEY = 'teacher-passcode';
+  const TEACHER_OK_STORAGE = 'rsv-teacher-ok';
+
+  async function rsvHashCode(code){
+    const text = 'sky-garden-teacher:' + code;
+    try{
+      if(window.crypto && crypto.subtle){
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+        return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2, '0'); }).join('');
+      }
+    }catch(e){ /* 아래 예비 방식 사용 */ }
+    return simpleHash(text);
+  }
+
+  function rsvShowGate(message){
+    document.getElementById('rsv-gate').style.display = 'block';
+    document.getElementById('rsv-main').style.display = 'none';
+    const m = document.getElementById('rsv-code-msg');
+    m.textContent = message || '';
+    m.className = message ? 'form-msg err' : 'form-msg';
+  }
+  function rsvShowMain(){
+    document.getElementById('rsv-gate').style.display = 'none';
+    document.getElementById('rsv-main').style.display = 'block';
+  }
+
+  async function rsvEnsureAccess(){
+    if(libUnlocked){ rsvShowMain(); return true; }   // 사서 선생님으로 로그인한 상태면 바로 열어요
+    let cfg = null;
+    try{ cfg = await loadList(TEACHER_CODE_KEY); }catch(e){ cfg = null; }
+    const hash = cfg && cfg.hash ? cfg.hash : null;
+    if(!hash){
+      rsvShowGate('아직 인증번호가 설정되지 않았어요. 사서 선생님께 문의해주세요.');
+      return false;
+    }
+    let saved = null;
+    try{ saved = localStorage.getItem(TEACHER_OK_STORAGE); }catch(e){ saved = null; }
+    if(saved && saved === hash){ rsvShowMain(); return true; }
+    rsvShowGate('');
+    return false;
+  }
+  async function rsvEnter(){
+    if(await rsvEnsureAccess()) renderRsvUser();
+  }
+
+  document.getElementById('rsv-code-btn').addEventListener('click', async function(){
+    const input = document.getElementById('rsv-code');
+    const code = input.value.trim();
+    if(!code){ rsvShowGate('인증번호를 입력해주세요.'); return; }
+    this.disabled = true;
+    try{
+      let cfg = null;
+      try{ cfg = await loadList(TEACHER_CODE_KEY); }catch(e){ cfg = null; }
+      const hash = cfg && cfg.hash ? cfg.hash : null;
+      if(!hash){ rsvShowGate('아직 인증번호가 설정되지 않았어요. 사서 선생님께 문의해주세요.'); return; }
+      if(await rsvHashCode(code) !== hash){ rsvShowGate('인증번호가 맞지 않아요. 다시 확인해주세요.'); return; }
+      try{ localStorage.setItem(TEACHER_OK_STORAGE, hash); }catch(e){ /* 저장이 안 되면 이번에만 열려요 */ }
+      input.value = '';
+      rsvShowMain();
+      renderRsvUser();
+    }finally{
+      this.disabled = false;
+    }
+  });
+  document.getElementById('rsv-code').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('rsv-code-btn').click(); }
+  });
+  document.getElementById('rsv-lock-btn').addEventListener('click', function(){
+    try{ localStorage.removeItem(TEACHER_OK_STORAGE); }catch(e){}
+    rsvShowGate('');
+  });
+
   const rsvModal = document.getElementById('rsv-modal');
   function openRsvModal(dateISO, period){
     if(dateISO < rsvISO(new Date())) return;
@@ -3233,7 +3328,10 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
 
   async function renderMyReservations(){
     const box = document.getElementById('my-rsv-list');
-    if(!box || !currentStudent) return;
+    const card = document.getElementById('my-rsv-card');
+    const isTeacher = !!currentStudent && currentStudent.id === '교사';
+    if(card) card.style.display = isTeacher ? '' : 'none';
+    if(!box || !currentStudent || !isTeacher) return;
     box.innerHTML = '<div class="empty-state">불러오는 중...</div>';
     let items;
     try{
@@ -3267,6 +3365,37 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
       b.addEventListener('click', function(){ doCancelMyReservation(myRsvUpcoming[Number(b.dataset.idx)]); });
     });
   }
+
+  /* ----- 사서 화면: 선생님 전용 인증번호 설정 ----- */
+  async function loadTeacherCodeStatus(){
+    const el = document.getElementById('lib-tcode-status');
+    if(!el) return;
+    let cfg = null;
+    try{ cfg = await loadList(TEACHER_CODE_KEY); }catch(e){ cfg = null; }
+    el.textContent = (cfg && cfg.hash)
+      ? '✅ 인증번호가 설정되어 있어요.'
+      : '⚠️ 아직 설정하지 않았어요. 설정하기 전에는 선생님들도 도서관 이용 예약 메뉴를 열 수 없어요.';
+  }
+  document.getElementById('lib-tcode-btn').addEventListener('click', async function(){
+    const input = document.getElementById('lib-tcode');
+    const msg = document.getElementById('lib-tcode-msg');
+    const code = input.value.trim();
+    if(code.length < 4){ msg.textContent = '인증번호는 4자 이상으로 입력해주세요.'; return; }
+    this.disabled = true;
+    try{
+      const hash = await rsvHashCode(code);
+      const ok = await saveList(TEACHER_CODE_KEY, {hash:hash});
+      if(ok){
+        input.value = '';
+        msg.textContent = '저장됐어요. 선생님들께 새 인증번호를 알려주세요. (이전 번호로 열어둔 기기도 다시 입력해야 해요)';
+        loadTeacherCodeStatus();
+      }else{
+        msg.textContent = '저장에 실패했어요. 다시 시도해주세요.';
+      }
+    }finally{
+      this.disabled = false;
+    }
+  });
 
   /* ----- 사서 화면 서브 탭 ----- */
   function updateLibTabBadges(){
@@ -3563,6 +3692,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
     renderCatalogAddedList();
     renderCatalogRemovedList();
     loadAdminRsvList();
+    loadTeacherCodeStatus();
     updateLibTabBadges();
   }
 
@@ -3662,7 +3792,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   document.querySelectorAll('nav.tabs button').forEach(function(btn){
     btn.addEventListener('click', function(){
       activateTab(btn.dataset.target);
-      if(btn.dataset.target === 'reserve') renderRsvUser();
+      if(btn.dataset.target === 'reserve') rsvEnter();
       if(history.replaceState){ history.replaceState(null, '', '#'+btn.dataset.target); }
     });
   });
@@ -3674,7 +3804,7 @@ const LIBRARY_CATALOG = [{"t":"(EBS 지식 프라임)베스트. 2","a":"EBS 지�
   if(validTabIds.indexOf(initialHash) !== -1){
     activateTab(initialHash);
   }
-  renderRsvUser();
+  rsvEnter();
   (async function init(){
     news = await loadNewsCollection();
     wishes = await loadList(WISH_KEY);
